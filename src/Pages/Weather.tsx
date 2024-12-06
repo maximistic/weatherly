@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";  // Import the Image component from next/image
 import { WiRaindrop, WiThermometer, WiStrongWind, WiDaySunny } from "react-icons/wi";
 
 const Weather = () => {
@@ -33,10 +34,11 @@ const Weather = () => {
               <p className="text-gray-400">Chance of rain: 0%</p>
               <h2 className="text-6xl font-bold mt-4">31°</h2>
             </div>
-            <img
+            <Image
               src="https://openweathermap.org/img/wn/01d.png"
               alt="Sunny"
-              className="w-32 h-32"
+              width={128}  // Specify width and height for optimization
+              height={128}
             />
           </div>
 
@@ -50,10 +52,12 @@ const Weather = () => {
                   className="bg-gray-800 p-4 rounded-lg text-center min-w-[80px]"
                 >
                   <p className="text-sm mb-2">{hour.time}</p>
-                  <img
+                  <Image
                     src={hour.icon}
                     alt="Weather Icon"
-                    className="w-12 h-12 mx-auto mb-2"
+                    width={48}  // Specify width and height for optimization
+                    height={48}
+                    className="mx-auto mb-2"
                   />
                   <p className="font-bold">{hour.temp}</p>
                 </div>
@@ -107,10 +111,11 @@ const Weather = () => {
                 className="flex justify-between items-center border-b border-gray-700 py-2 last:border-b-0"
               >
                 <p className="font-bold">{day.day}</p>
-                <img
+                <Image
                   src={day.icon}
                   alt={day.condition}
-                  className="w-8 h-8"
+                  width={32}  // Specify width and height for optimization
+                  height={32}
                 />
                 <p className="text-gray-400">{day.condition}</p>
                 <p className="font-bold">{day.temp}</p>
