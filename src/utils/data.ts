@@ -9,9 +9,9 @@ export interface HourlyForecast {
   icon: string;
 }
 
-export interface DailyForecast {
+export interface WeeklyForecast {
   day: string;
-  description: string;
+  condition: string;
   temp: string;
   icon: string;
 }
@@ -24,73 +24,74 @@ interface WeatherData {
     temp_min: number;
   };
   weather: {
-    description: string;
+    main: string;
     icon: string;
   }[];
-}
-
-interface CurrentWeatherData {
-  name: string;
-  main: {
-    temp: number;
-    temp_min: number;
-    temp_max: number;
+  rain?: {
+    [key: string]: number;
   };
-  sys: {
-    sunrise: number;
-    sunset: number;
-  };
-  weather: {
-    description: string;
-    icon: string;
-  }[];
 }
 
 interface ForecastData {
   list: WeatherData[];
 }
 
-export const fetchWeatherData = async (lat: number, lon: number) => {
-  const currentWeatherUrl = `${BASE_URL}weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
-  const forecastUrl = `${BASE_URL}forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
+interface CurrentWeatherData {
+  name: string;
+  main: {
+    temp: number;
+    feels_like: number;
+  };
+  wind: {
+    speed: number;
+  };
+  rain?: {
+    [key: string]: number;
+  };
+}
 
-  try {
-    const [currentWeatherResponse, forecastResponse] = await Promise.all([
-      axios.get(currentWeatherUrl),
-      axios.get(forecastUrl),
-    ]);
+export const fetchWeatherData = async (city: string) => {
+    const currentWeatherUrl = `${BASE_URL}weather?q=${city}&units=metric&appid=${API_KEY}`;
+    const forecastUrl = `${BASE_URL}forecast?q=${city}&units=metric&appid=${API_KEY}`;
+  
+    try {
+      const [currentWeatherResponse, forecastResponse] = await Promise.all([
+        axios.get(currentWeatherUrl),
+        axios.get(forecastUrl),
+      ]);
 
     const currentWeather = currentWeatherResponse.data as CurrentWeatherData;
     const forecastData = forecastResponse.data as ForecastData;
 
     const hourlyForecast: HourlyForecast[] = forecastData.list.slice(0, 6).map((item: WeatherData) => ({
-      time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      temp: `${Math.round(item.main.temp)}°`,
-      icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
-    }));
-
-    const dailyForecast: DailyForecast[] = forecastData.list
-      .filter((_item, index) => index % 8 === 0) // 1 per day
-      .slice(0, 5)
-      .map((item: WeatherData) => ({
-        day: new Date(item.dt * 1000).toLocaleDateString([], { weekday: "short" }),
-        description: item.weather[0].description,
-        temp: `${Math.round(item.main.temp_min)}/${Math.round(item.main.temp_max)}`,
+        time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        temp: `${Math.round(item.main.temp)}°`,
         icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
       }));
 
-    return {
-      city: currentWeather.name,
-      currentTemp: `${Math.round(currentWeather.main.temp)}°`,
-      minTemp: `${Math.round(currentWeather.main.temp_min)}°`,
-      maxTemp: `${Math.round(currentWeather.main.temp_max)}°`,
-      sunrise: new Date(currentWeather.sys.sunrise * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      sunset: new Date(currentWeather.sys.sunset * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      hourlyForecast,
-      dailyForecast,
+    const weeklyForecast: WeeklyForecast[] = forecastData.list
+      .filter((_item: WeatherData, index: number) => index % 8 === 0) // Select one forecast per day
+      .slice(0, 7)
+      .map((item: WeatherData) => ({
+        day: new Date(item.dt * 1000).toLocaleDateString([], { weekday: "short" }),
+        condition: item.weather[0].main,
+        temp: `${Math.round(item.main.temp_max)}/${Math.round(item.main.temp_min)}`,
+        icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
+      }));
+
+      return {
+        city: currentWeather.name,
+        currentTemp: `${Math.round(currentWeather.main.temp)}°`,
+        chanceOfRain: `${currentWeather.rain ? currentWeather.rain["1h"] || 0 : 0}%`,
+        realFeel: `${Math.round(currentWeather.main.feels_like)}°`,
+        wind: `${currentWeather.wind.speed} km/h`,
+
+        uvIndex: "3", // Example placeholder
+        hourlyForecast,
+        weeklyForecast,
     };
-  } catch (error) {
-    console.error("Error fetching weather data:", error);
-    throw error;
-  }
+} catch (error) {
+  console.error("Error fetching weather data:", error);
+  throw error;
+}
 };
