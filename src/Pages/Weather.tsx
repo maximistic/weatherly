@@ -42,9 +42,8 @@ const Weather = () => {
             />
           </div>
 
-          {/* Today's Forecast */}
           <div className="mb-8">
-            <h3 className="text-lg font-semibold mb-4">Today's Forecast</h3>
+            <h3 className="text-lg font-semibold mb-4">Today&apos;s Forecast</h3>
             <div className="flex space-x-4 overflow-x-auto">
               {hourlyForecast.map((hour, index) => (
                 <div
