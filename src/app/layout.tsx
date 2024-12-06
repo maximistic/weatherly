@@ -20,11 +20,7 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [currentView, setCurrentView] = useState("Weather"); // Tracks which content to show
 
@@ -44,16 +40,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased ${
-          isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
-        }`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}
       >
         <div className="flex h-screen p-8 rounded-md">
           {/* Sidebar */}
           <div
-            className={`p-5 w-20 sm:w-40 transition-all duration-300 rounded-lg mr-8 ${
-              isDarkMode ? "bg-gray-800" : "bg-gray-200"
-            }`}
+            className={`p-5 w-20 sm:w-40 transition-all duration-300 rounded-lg mr-8 ${isDarkMode ? "bg-gray-800" : "bg-gray-200"}`}
           >
             {/* Logo */}
             <h1 className="text-center text-xl font-bold mt-2 sm:block hidden cursor-none">
@@ -94,10 +86,10 @@ export default function RootLayout({
           </div>
 
           {/* Main Content */}
-          <div className="flex-1">
+          <div className="flex-1 flex flex-col">
             {/* Searchbar */}
             <div
-              className={`p-4 flex items-center space-x-4 rounded-lg mr-8 ${
+              className={`p-4 flex items-center space-x-4 rounded-lg mb-8 ${
                 isDarkMode ? "bg-gray-800" : "bg-gray-200"
               }`}
             >
@@ -117,7 +109,7 @@ export default function RootLayout({
             </div>
 
             {/* Render Dynamic Content */}
-            <div className="p-8">{renderContent()}</div>
+            <div className="p-8 flex-1 overflow-auto">{renderContent()}</div>
           </div>
         </div>
       </body>
