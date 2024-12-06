@@ -1,10 +1,12 @@
 "use client";
 
 import localFont from "next/font/local";
-import Link from "next/link";
 import { useState } from "react";
-import { FiMenu, FiCloud, FiSettings, FiSearch, FiSun, FiMoon } from "react-icons/fi";
+import { FiCloud, FiSettings, FiSearch, FiSun, FiMoon } from "react-icons/fi";
 import { FaCity } from "react-icons/fa";
+import Weather from "@/Pages/Weather";
+import Cities from "@/Pages/Cities";
+import Settings from "@/Pages/Settings";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -24,7 +26,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [currentView, setCurrentView] = useState("Weather"); // Tracks which content to show
+
+  const renderContent = () => {
+    switch (currentView) {
+      case "Weather":
+        return <Weather />;
+      case "Cities":
+        return <Cities />;
+      case "Settings":
+        return <Settings />;
+      default:
+        return <Weather />;
+    }
+  };
 
   return (
     <html lang="en">
@@ -40,47 +55,31 @@ export default function RootLayout({
               isDarkMode ? "bg-gray-800" : "bg-gray-200"
             }`}
           >
-            {/* Hamburger Menu */}
-            <div className="block sm:hidden">
-              <button
-                className="p-2 rounded-md hover:bg-gray-700"
-                onClick={() => setMenuOpen(!menuOpen)}
-              >
-                <FiMenu size={28} />
-              </button>
-            </div>
+            {/* Logo */}
+            <h1 className="text-center text-xl font-bold mt-2 sm:block hidden cursor-none">
+              WEATHERLY
+            </h1>
 
-            {/* Sidebar Content */}
-            <div
-              className={`${
-                menuOpen || !isSmallScreen() ? "block" : "hidden"
-              } sm:block`}
-            >
-              {/* Logo */}
-              <h1
-                className="text-center text-xl font-bold mt-2 sm:block hidden cursor-none"
-              >
-                WEATHERLY
-              </h1>
-
-              {/* Sidebar Buttons */}
-              <div className="flex flex-col items-center space-y-4 mt-10 ">
-                <SidebarButton
-                  icon={<FiCloud size={28} />}
-                  label="Weather"
-                  link="/"
-                />
-                <SidebarButton
-                  icon={<FaCity size={28} />}
-                  label="Cities"
-                  link="/Cities"
-                />
-                <SidebarButton
-                  icon={<FiSettings size={28} />}
-                  label="Settings"
-                  link="/Settings"
-                />
-              </div>
+            {/* Sidebar Buttons */}
+            <div className="flex flex-col items-center space-y-4 mt-10">
+              <SidebarButton
+                icon={<FiCloud size={28} />}
+                label="Weather"
+                isActive={currentView === "Weather"}
+                onClick={() => setCurrentView("Weather")}
+              />
+              <SidebarButton
+                icon={<FaCity size={28} />}
+                label="Cities"
+                isActive={currentView === "Cities"}
+                onClick={() => setCurrentView("Cities")}
+              />
+              <SidebarButton
+                icon={<FiSettings size={28} />}
+                label="Settings"
+                isActive={currentView === "Settings"}
+                onClick={() => setCurrentView("Settings")}
+              />
             </div>
 
             {/* Theme Toggle */}
@@ -117,8 +116,8 @@ export default function RootLayout({
               />
             </div>
 
-            {/* Main Content */}
-            <div className="p-8">{children}</div>
+            {/* Render Dynamic Content */}
+            <div className="p-8">{renderContent()}</div>
           </div>
         </div>
       </body>
@@ -129,23 +128,23 @@ export default function RootLayout({
 function SidebarButton({
   icon,
   label,
-  link,
+  isActive,
+  onClick,
 }: {
   icon: React.ReactNode;
   label: string;
-  link: string;
+  isActive: boolean;
+  onClick: () => void;
 }) {
   return (
-    <Link href={link}>
-      <button className="flex flex-col items-center hover:bg-gray-700 rounded-md p-2 w-full hover:text-gray-50">
-        {icon}
-        <span className="text-sm mt-1">{label}</span>
-      </button>
-    </Link>
+    <button
+      onClick={onClick}
+      className={`flex flex-col items-center hover:bg-gray-700 rounded-md p-2 w-full hover:text-gray-50 ${
+        isActive ? "bg-gray-700 text-gray-50" : ""
+      }`}
+    >
+      {icon}
+      <span className="text-sm mt-1">{label}</span>
+    </button>
   );
-}
-
-function isSmallScreen() {
-  if (typeof window === "undefined") return false;
-  return window.innerWidth < 640;
 }
