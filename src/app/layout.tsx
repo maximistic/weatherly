@@ -58,13 +58,13 @@ export default function RootLayout({
             >
               {/* Logo */}
               <h1
-                className="text-center text-lg font-bold mt-4 sm:block hidden cursor-none"
+                className="text-center text-xl font-bold mt-2 sm:block hidden cursor-none"
               >
                 WEATHERLY
               </h1>
 
               {/* Sidebar Buttons */}
-              <div className="flex flex-col items-center space-y-4 mt-8">
+              <div className="flex flex-col items-center space-y-4 mt-10 ">
                 <SidebarButton
                   icon={<FiCloud size={28} />}
                   label="Weather"
@@ -84,9 +84,9 @@ export default function RootLayout({
             </div>
 
             {/* Theme Toggle */}
-            <div className="absolute bottom-8 left-8">
+            <div className="absolute bottom-8 left-8 pl-14 pb-10">
               <button
-                className="p-2 rounded-md hover:bg-gray-600"
+                className="rounded-md hover:bg-gray-600"
                 onClick={() => setIsDarkMode(!isDarkMode)}
               >
                 {isDarkMode ? <FiSun size={24} /> : <FiMoon size={24} />}
