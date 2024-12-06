@@ -16,6 +16,40 @@ export interface WeeklyForecast {
   icon: string;
 }
 
+interface WeatherData {
+  dt: number;
+  main: {
+    temp: number;
+    temp_max: number;
+    temp_min: number;
+  };
+  weather: {
+    main: string;
+    icon: string;
+  }[];
+  rain?: {
+    [key: string]: number;
+  };
+}
+
+interface ForecastData {
+  list: WeatherData[];
+}
+
+interface CurrentWeatherData {
+  name: string;
+  main: {
+    temp: number;
+    feels_like: number;
+  };
+  wind: {
+    speed: number;
+  };
+  rain?: {
+    [key: string]: number;
+  };
+}
+
 export const fetchWeatherData = async (city: string) => {
   const currentWeatherUrl = `${BASE_URL}weather?q=${city}&units=metric&appid=${API_KEY}`;
   const forecastUrl = `${BASE_URL}forecast?q=${city}&units=metric&appid=${API_KEY}`;
@@ -26,19 +60,19 @@ export const fetchWeatherData = async (city: string) => {
       axios.get(forecastUrl),
     ]);
 
-    const currentWeather = currentWeatherResponse.data;
-    const forecastData = forecastResponse.data;
+    const currentWeather = currentWeatherResponse.data as CurrentWeatherData;
+    const forecastData = forecastResponse.data as ForecastData;
 
-    const hourlyForecast: HourlyForecast[] = forecastData.list.slice(0, 6).map((item: any) => ({
+    const hourlyForecast: HourlyForecast[] = forecastData.list.slice(0, 6).map((item: WeatherData) => ({
       time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       temp: `${Math.round(item.main.temp)}°`,
       icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
     }));
 
     const weeklyForecast: WeeklyForecast[] = forecastData.list
-      .filter((item: any, index: number) => index % 8 === 0) // Select one forecast per day
+      .filter((_item: WeatherData, index: number) => index % 8 === 0) // Select one forecast per day
       .slice(0, 7)
-      .map((item: any) => ({
+      .map((item: WeatherData) => ({
         day: new Date(item.dt * 1000).toLocaleDateString([], { weekday: "short" }),
         condition: item.weather[0].main,
         temp: `${Math.round(item.main.temp_max)}/${Math.round(item.main.temp_min)}`,
@@ -51,7 +85,7 @@ export const fetchWeatherData = async (city: string) => {
       chanceOfRain: `${currentWeather.rain ? currentWeather.rain["1h"] || 0 : 0}%`,
       realFeel: `${Math.round(currentWeather.main.feels_like)}°`,
       wind: `${currentWeather.wind.speed} km/h`,
-      uvIndex: "3", // 
+      uvIndex: "3", // Example placeholder
       hourlyForecast,
       weeklyForecast,
     };
