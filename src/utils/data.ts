@@ -68,7 +68,7 @@ export const fetchGeolocation = async (): Promise<{ city: string; lat: number; l
           });
         },
         (error) => {
-          console.error("Geolocation failed:", error);
+          console.warn("Geolocation failed:", error);
 
           let errorMessage;
           switch (error.code) {

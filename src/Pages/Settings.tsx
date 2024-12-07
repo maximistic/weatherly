@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+"use client";
+import React from "react";
+import { useSettings } from "../context/SettingsContext";
 
 const Settings = () => {
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [is12HourTime, setIs12HourTime] = useState(false);
+  const {
+    notificationsEnabled,
+    is12HourTime,
+    setNotificationsEnabled,
+    setIs12HourTime,
+  } = useSettings();
 
   return (
     <div className="p-8 bg-gray-900 text-white font-[family-name:var(--font-geist-sans)] rounded-lg">

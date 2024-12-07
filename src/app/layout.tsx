@@ -7,6 +7,7 @@ import Weather from "../Pages/Weather";
 import Cities from "../Pages/Cities";
 import Settings from "../Pages/Settings";
 import "./globals.css";
+import { SettingsProvider } from "../context/SettingsContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -48,6 +49,7 @@ export default function RootLayout() {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900 text-white`}
       >
+        <SettingsProvider>
         <div className="flex h-screen p-4 sm:p-8 rounded-md">
           {/* Sidebar */}
           <div
@@ -113,6 +115,7 @@ export default function RootLayout() {
             <div className="p-4 sm:p-8 flex-1 overflow-auto">{renderContent()}</div>
           </div>
         </div>
+        </SettingsProvider>
       </body>
     </html>
   );
