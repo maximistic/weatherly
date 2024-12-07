@@ -25,7 +25,8 @@ export default function RootLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleSearch = (query: string) => {
-    setSearchQuery(query); // Pass query to Weather component
+    setSearchQuery(query);
+    if (currentView === "Cities") return; // Allow search functionality in Cities tab
     setCurrentView("Weather"); // Switch to Weather view
   };
 
@@ -34,7 +35,7 @@ export default function RootLayout() {
       case "Weather":
         return <Weather searchQuery={searchQuery} />;
       case "Cities":
-        return <Cities searchQuery={searchQuery}/>;
+        return <Cities searchQuery={searchQuery} />;
       case "Settings":
         return <Settings />;
       default:
@@ -54,12 +55,9 @@ export default function RootLayout() {
               isSidebarOpen ? "block" : "hidden"
             } sm:block p-5 w-16 sm:w-40 transition-all duration-300 rounded-lg mr-4 sm:mr-8 bg-gray-800`}
           >
-            {/* Logo */}
             <h1 className="text-center text-xl font-bold mt-2 sm:block hidden cursor-none">
               WEATHERLY
             </h1>
-
-            {/* Sidebar Buttons */}
             <div className="flex flex-col items-center space-y-4 mt-10">
               <SidebarButton
                 icon={<FiCloud size={28} />}
@@ -84,7 +82,6 @@ export default function RootLayout() {
 
           {/* Main Content */}
           <div className="flex-1 flex flex-col w-full">
-            {/* Searchbar */}
             <div
               className={`p-4 flex items-center space-x-4 rounded-lg mb-8 bg-gray-800`}
             >
@@ -96,7 +93,6 @@ export default function RootLayout() {
                   <FiMenu size={28} />
                 </button>
               </div>
-
               <input
                 type="text"
                 placeholder="Search by city or ZIP"
@@ -114,8 +110,6 @@ export default function RootLayout() {
                 }}
               />
             </div>
-
-            {/* Render Dynamic Content */}
             <div className="p-4 sm:p-8 flex-1 overflow-auto">{renderContent()}</div>
           </div>
         </div>
