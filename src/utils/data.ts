@@ -52,17 +52,35 @@ interface CurrentWeatherData {
 
 export const fetchGeolocation = async (): Promise<{ city: string; lat: number; lon: number }> => {
   return new Promise((resolve) => {
-    if (navigator.geolocation) {
+    if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           resolve({
-            city: "Current Location", // Browser geolocation doesn't provide city; placeholder used
+            city: "Current Location", // Placeholder for browser-provided location
             lat: position.coords.latitude,
             lon: position.coords.longitude,
           });
         },
         (error) => {
           console.error("Geolocation failed:", error);
+
+          // Geolocation-specific errors
+          let errorMessage;
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              errorMessage = "Permission denied for accessing geolocation.";
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMessage = "Position unavailable.";
+              break;
+            case error.TIMEOUT:
+              errorMessage = "Geolocation request timed out.";
+              break;
+            default:
+              errorMessage = "An unknown error occurred.";
+          }
+          console.warn(errorMessage);
+
           // Fallback to default location
           resolve({ city: "Coimbatore", lat: 11.0168, lon: 76.9858 });
         }
