@@ -17,28 +17,19 @@ const Weather = () => {
   } | null>(null);
 
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const getWeather = async () => {
       try {
-        // Fetch user's geolocation using IP-based service
         const geolocation = await fetchGeolocation();
-
-        // Fetch weather data using the obtained geolocation
         const data = await fetchWeatherData(undefined, geolocation.lat, geolocation.lon);
         setWeatherData(data);
         setLoading(false);
-      } catch {
-        try {
-          // Fallback to default location
-          const data = await fetchWeatherData("Coimbatore");
-          setWeatherData(data);
-          setLoading(false);
-        } catch {
-          setError(true);
-          setLoading(false);
-        }
+      } catch (err) {
+        console.error("Error fetching weather data:", err);
+        setError("Failed to fetch weather data.");
+        setLoading(false);
       }
     };
 
@@ -46,10 +37,11 @@ const Weather = () => {
   }, []);
 
   if (loading) return <div className="text-white">Loading...</div>;
-  if (error) return <div className="text-white">Failed to fetch weather data.</div>;
+  if (error) return <div className="text-white">{error}</div>;
 
   return (
     <div className="p-6 bg-gray-900 text-white font-[family-name:var(--font-geist-sans)]">
+      {/* Weather Data Display */}
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           <div className="flex justify-between items-center mb-8">
@@ -59,13 +51,14 @@ const Weather = () => {
               <h2 className="text-6xl font-bold mt-4">{weatherData?.currentTemp}</h2>
             </div>
             <Image
-              src={weatherData?.hourlyForecast[0].icon || ""}
+              src={weatherData?.hourlyForecast[0]?.icon || ""}
               alt="Current Weather"
               width={128}
               height={128}
             />
           </div>
 
+          {/* Today's Forecast */}
           <div className="mb-8">
             <h3 className="text-lg font-semibold mb-4">Today&apos;s Forecast</h3>
             <div className="flex space-x-4 overflow-x-auto">
@@ -88,6 +81,7 @@ const Weather = () => {
             </div>
           </div>
 
+          {/* Air Conditions */}
           <div className="mb-8">
             <h3 className="text-lg font-semibold mb-4">Air Conditions</h3>
             <div className="grid grid-cols-2 gap-4 bg-gray-800 p-4 rounded-lg">
@@ -123,6 +117,7 @@ const Weather = () => {
           </div>
         </div>
 
+        {/* Weekly Forecast */}
         <div>
           <h3 className="text-lg font-semibold mb-4">7-Day Forecast</h3>
           <div className="bg-gray-800 p-4 rounded-lg">
