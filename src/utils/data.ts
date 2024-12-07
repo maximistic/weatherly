@@ -50,7 +50,12 @@ interface CurrentWeatherData {
   rain?: {
     [key: string]: number;
   };
+  sys: {
+    sunrise: number; // UNIX timestamp for sunrise
+    sunset: number;  // UNIX timestamp for sunset
+  };
 }
+
 export const fetchGeolocation = async (): Promise<{ city: string; lat: number; lon: number }> => {
   return new Promise((resolve) => {
     if ("geolocation" in navigator) {
