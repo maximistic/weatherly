@@ -51,16 +51,28 @@ interface CurrentWeatherData {
 }
 
 export const fetchGeolocation = async (): Promise<{ city: string; lat: number; lon: number }> => {
-  try {
-    // Fetch location using IP-based geolocation
-    const response = await axios.get("http://ip-api.com/json/");
-    const { city, lat, lon } = response.data;
-    return { city, lat, lon };
-  } catch (error) {
-    console.error("IP Geolocation failed, falling back to default location:", error);
-    // Fallback location: Coimbatore
-    return { city: "Coimbatore", lat: 11.0168, lon: 76.9858 };
-  }
+  return new Promise((resolve) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve({
+            city: "Current Location", // Browser geolocation doesn't provide city; placeholder used
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Geolocation failed:", error);
+          // Fallback to default location
+          resolve({ city: "Coimbatore", lat: 11.0168, lon: 76.9858 });
+        }
+      );
+    } else {
+      console.error("Geolocation not supported by browser");
+      // Fallback to default location
+      resolve({ city: "Coimbatore", lat: 11.0168, lon: 76.9858 });
+    }
+  });
 };
 
 export const fetchWeatherData = async (city?: string, lat?: number, lon?: number) => {
