@@ -21,18 +21,24 @@ const geistMono = localFont({
 
 export default function RootLayout() {
   const [currentView, setCurrentView] = useState("Weather");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // For hamburger menu
+  const [searchQuery, setSearchQuery] = useState(""); 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query); // Pass query to Weather component
+    setCurrentView("Weather"); // Switch to Weather view
+  };
 
   const renderContent = () => {
     switch (currentView) {
       case "Weather":
-        return <Weather />;
+        return <Weather searchQuery={searchQuery} />;
       case "Cities":
-        return <Cities />;
+        return <Cities searchQuery={searchQuery}/>;
       case "Settings":
         return <Settings />;
       default:
-        return <Weather />;
+        return <Weather searchQuery={searchQuery} />;
     }
   };
 
@@ -46,7 +52,7 @@ export default function RootLayout() {
           <div
             className={`${
               isSidebarOpen ? "block" : "hidden"
-            } sm:block p-5 w-16 sm:w-40 transition-all duration-300 rounded-lg mr-4 sm:mr-8 ${"bg-gray-800"}`}
+            } sm:block p-5 w-16 sm:w-40 transition-all duration-300 rounded-lg mr-4 sm:mr-8 bg-gray-800`}
           >
             {/* Logo */}
             <h1 className="text-center text-xl font-bold mt-2 sm:block hidden cursor-none">
@@ -76,12 +82,11 @@ export default function RootLayout() {
             </div>
           </div>
 
-
           {/* Main Content */}
           <div className="flex-1 flex flex-col w-full">
             {/* Searchbar */}
             <div
-              className={`p-4 flex items-center space-x-4 rounded-lg mb-8 ${"bg-gray-800"}`}
+              className={`p-4 flex items-center space-x-4 rounded-lg mb-8 bg-gray-800`}
             >
               <div className="sm:hidden absolute top-4 left-4 z-10 pl-5 pt-5 pr-5">
                 <button
@@ -94,12 +99,19 @@ export default function RootLayout() {
 
               <input
                 type="text"
-                placeholder="Search for cities"
-                className={`px-4 py-2rounded-md flex-1 ${"bg-gray-700 text-white border border-gray-600"}`}
+                placeholder="Search by city or ZIP"
+                className="px-4 py-2 rounded-md flex-1 bg-gray-700 text-white border border-gray-600"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSearch((e.target as HTMLInputElement).value);
+                }}
               />
               <FiSearch
                 size={28}
-                className={`cursor-pointer text-gray-400`}
+                className="cursor-pointer text-gray-400"
+                onClick={() => {
+                  const input = document.querySelector<HTMLInputElement>("input");
+                  if (input) handleSearch(input.value);
+                }}
               />
             </div>
 

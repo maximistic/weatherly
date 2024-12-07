@@ -1,10 +1,20 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { WiThermometer, WiStrongWind, WiSunrise, WiSunset, WiThermometerExterior, WiThermometerInternal } from "react-icons/wi";
-import { fetchWeatherData, fetchGeolocation, HourlyForecast, WeeklyForecast } from "../utils/data";
+import {
+  WiThermometer,
+  WiStrongWind,
+  WiSunrise,
+  WiSunset,
+} from "react-icons/wi";
+import {
+  fetchWeatherData,
+  fetchGeolocation,
+  HourlyForecast,
+  WeeklyForecast,
+} from "../utils/data";
 
-const Weather = () => {
+const Weather = ({ searchQuery }: { searchQuery: string }) => {
   const [weatherData, setWeatherData] = useState<{
     city: string;
     currentTemp: string;
@@ -21,45 +31,41 @@ const Weather = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const getWeather = async () => {
-      try {
-        const geolocation = await fetchGeolocation();
-        const data = await fetchWeatherData(undefined, geolocation.lat, geolocation.lon);
-        setWeatherData(data);
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching weather data:", err);
-        setError("Failed to fetch weather data.");
-        setLoading(false);
-      }
-    };
-
-    getWeather();
-  }, []);
-
-  const handleRetry = async () => {
-    setError(null);
+  const fetchData = async (query?: string) => {
     setLoading(true);
+    setError(null);
     try {
-      const geolocation = await fetchGeolocation();
-      const data = await fetchWeatherData(undefined, geolocation.lat, geolocation.lon);
+      const data = query
+        ? await fetchWeatherData(query)
+        : await fetchGeolocation().then((geo) =>
+            fetchWeatherData(undefined, geo.lat, geo.lon)
+          );
       setWeatherData(data);
       setLoading(false);
     } catch (err) {
       console.error("Error fetching weather data:", err);
-      setError("Failed to fetch weather data.");
+      setError("Failed to fetch weather data. Check your input.");
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchData(searchQuery);
+  }, [searchQuery]);
+
   if (loading) return <div className="text-white">Loading...</div>;
-  if (error) return (
-    <div>
-      <p>{error}</p>
-      <button onClick={handleRetry}>Retry</button>
-    </div>
-  );
+  if (error)
+    return (
+      <div className="text-center">
+        <p className="text-red-400">{error}</p>
+        <button
+          className="bg-blue-600 text-white px-4 py-2 mt-4 rounded-md"
+          onClick={() => fetchData()}
+        >
+          Retry
+        </button>
+      </div>
+    );
 
   return (
     <div className="p-6 bg-gray-900 text-white font-[family-name:var(--font-geist-sans)]">
@@ -71,11 +77,11 @@ const Weather = () => {
               <h1 className="text-3xl font-bold">{weatherData?.city}</h1>
               <div className="flex items-center space-x-4 mt-2">
                 <div className="flex items-center">
-                  <WiThermometerExterior className="mr-2 text-red-400" />
+                  <WiThermometer size={24} className="mr-2 text-red-400" />
                   <span>{weatherData?.temp_max}</span>
                 </div>
                 <div className="flex items-center">
-                  <WiThermometerInternal className="mr-2 text-blue-400" />
+                  <WiThermometer size={24} className="mr-2 text-blue-400" />
                   <span>{weatherData?.temp_min}</span>
                 </div>
               </div>

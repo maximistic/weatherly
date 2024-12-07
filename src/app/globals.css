@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@media screen and (max-width: 768px) {
+    .p-4 {
+      padding: 2rem 1rem;
+    }
+  
+    .sm\\:block {
+      display: block !important;
+    }
+  
+    .sm\\:w-40 {
+      width: 100% !important;
+    }
+  
+    .sm\\:hidden {
+      display: none !important;
+    }
+  
+    .sm\\:mr-8 {
+      margin-right: 0 !important;
+    }
+  }
+  

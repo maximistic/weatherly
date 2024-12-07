@@ -51,8 +51,8 @@ interface CurrentWeatherData {
     [key: string]: number;
   };
   sys: {
-    sunrise: number; // UNIX timestamp for sunrise
-    sunset: number;  // UNIX timestamp for sunset
+    sunrise: number; 
+    sunset: number;  
   };
 }
 
