@@ -1,20 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { fetchWeatherData } from "../utils/data";
 import { FiTrash } from "react-icons/fi";
+import { useCities } from "../context/CitiesContext";
 
 type City = {
   name: string;
   temp: string;
   icon: string;
   time: string;
+  timezone: string;
   hourlyForecast: { time: string; temp: string; icon: string }[];
 };
 
 const Cities = ({ searchQuery }: { searchQuery: string }) => {
-  const [cities, setCities] = useState<City[]>([]);
+  const { cities, addCity, deleteCity } = useCities();
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [ setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (searchQuery) {
@@ -29,17 +31,21 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
     }
     try {
       const weatherData = await fetchWeatherData(query);
-      const currentTime = new Date().toLocaleTimeString([], {
+      const cityTimezone = weatherData.timezone;
+      const cityDate = new Date().toLocaleString("en-US", {
+        timeZone: cityTimezone,
         hour: "2-digit",
         minute: "2-digit",
+        hour12: true,
       });
 
       const newCity: City = {
         name: weatherData.city,
         temp: weatherData.currentTemp,
         icon: weatherData.hourlyForecast[0]?.icon || "",
-        time: currentTime,
-        hourlyForecast: weatherData.hourlyForecast.slice(0, 6), // Taking 6-hour forecast
+        time: cityDate,
+        timezone: cityTimezone,
+        hourlyForecast: weatherData.hourlyForecast.slice(0, 6),
       };
 
       if (cities.some((city) => city.name === newCity.name)) {
@@ -47,7 +53,7 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
         return;
       }
 
-      setCities([...cities, newCity]);
+      addCity(newCity);
       setError(null);
     } catch {
       setError("City not found or API error. Please try again.");
@@ -55,13 +61,12 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
   };
 
   const handleDeleteCity = (cityName: string) => {
-    setCities((prev) => prev.filter((city) => city.name !== cityName));
+    deleteCity(cityName);
     if (selectedCity?.name === cityName) setSelectedCity(null);
   };
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 p-4 sm:p-8">
-      {/* City List */}
       <div className="flex-1 space-y-4">
         <h2 className="text-xl font-bold">Your Cities</h2>
         {cities.map((city, index) => (
@@ -107,14 +112,8 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
           </p>
         )}
       </div>
-
-      {/* Selected City Details */}
       {selectedCity && (
-        <div
-          className={`flex-1 sm:max-w-sm p-4 rounded-lg bg-gray-900 border border-gray-700 space-y-4 ${
-            selectedCity ? "block" : "hidden"
-          }`}
-        >
+        <div className="flex-1 sm:max-w-sm p-4 rounded-lg bg-gray-900 border border-gray-700 space-y-4">
           <h2 className="text-lg font-bold">{selectedCity.name} Details</h2>
           <div className="flex items-center gap-4">
             <Image
@@ -153,5 +152,6 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
     </div>
   );
 };
+
 
 export default Cities;
