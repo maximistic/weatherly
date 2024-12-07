@@ -1,8 +1,8 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { WiRaindrop, WiThermometer, WiStrongWind, WiDaySunny } from "react-icons/wi";
-import { fetchWeatherData, HourlyForecast, WeeklyForecast } from "../utils/data";
+import { fetchWeatherData, fetchGeolocation, HourlyForecast, WeeklyForecast } from "../utils/data";
 
 const Weather = () => {
   const [weatherData, setWeatherData] = useState<{
@@ -22,12 +22,23 @@ const Weather = () => {
   useEffect(() => {
     const getWeather = async () => {
       try {
-        const data = await fetchWeatherData("riyadh");
+        // Fetch user's geolocation using IP-based service
+        const geolocation = await fetchGeolocation();
+
+        // Fetch weather data using the obtained geolocation
+        const data = await fetchWeatherData(undefined, geolocation.lat, geolocation.lon);
         setWeatherData(data);
         setLoading(false);
       } catch {
-        setError(true);
-        setLoading(false);
+        try {
+          // Fallback to default location
+          const data = await fetchWeatherData("Coimbatore");
+          setWeatherData(data);
+          setLoading(false);
+        } catch {
+          setError(true);
+          setLoading(false);
+        }
       }
     };
 

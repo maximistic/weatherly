@@ -50,27 +50,49 @@ interface CurrentWeatherData {
   };
 }
 
-export const fetchWeatherData = async (city: string) => {
-    const currentWeatherUrl = `${BASE_URL}weather?q=${city}&units=metric&appid=${API_KEY}`;
-    const forecastUrl = `${BASE_URL}forecast?q=${city}&units=metric&appid=${API_KEY}`;
-  
-    try {
-      const [currentWeatherResponse, forecastResponse] = await Promise.all([
-        axios.get(currentWeatherUrl),
-        axios.get(forecastUrl),
-      ]);
+export const fetchGeolocation = async (): Promise<{ city: string; lat: number; lon: number }> => {
+  try {
+    // Fetch location using IP-based geolocation
+    const response = await axios.get("http://ip-api.com/json/");
+    const { city, lat, lon } = response.data;
+    return { city, lat, lon };
+  } catch (error) {
+    console.error("IP Geolocation failed, falling back to default location:", error);
+    // Fallback location: Coimbatore
+    return { city: "Coimbatore", lat: 11.0168, lon: 76.9858 };
+  }
+};
+
+export const fetchWeatherData = async (city?: string, lat?: number, lon?: number) => {
+  let currentWeatherUrl, forecastUrl;
+
+  if (city) {
+    currentWeatherUrl = `${BASE_URL}weather?q=${city}&units=metric&appid=${API_KEY}`;
+    forecastUrl = `${BASE_URL}forecast?q=${city}&units=metric&appid=${API_KEY}`;
+  } else if (lat && lon) {
+    currentWeatherUrl = `${BASE_URL}weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
+    forecastUrl = `${BASE_URL}forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
+  } else {
+    throw new Error("Either city name or latitude/longitude must be provided");
+  }
+
+  try {
+    const [currentWeatherResponse, forecastResponse] = await Promise.all([
+      axios.get(currentWeatherUrl),
+      axios.get(forecastUrl),
+    ]);
 
     const currentWeather = currentWeatherResponse.data as CurrentWeatherData;
     const forecastData = forecastResponse.data as ForecastData;
 
     const hourlyForecast: HourlyForecast[] = forecastData.list.slice(0, 6).map((item: WeatherData) => ({
-        time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        temp: `${Math.round(item.main.temp)}°`,
-        icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
-      }));
+      time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      temp: `${Math.round(item.main.temp)}°`,
+      icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
+    }));
 
     const weeklyForecast: WeeklyForecast[] = forecastData.list
-      .filter((_item: WeatherData, index: number) => index % 8 === 0) // Select one forecast per day
+      .filter((_item: WeatherData, index: number) => index % 8 === 0)
       .slice(0, 7)
       .map((item: WeatherData) => ({
         day: new Date(item.dt * 1000).toLocaleDateString([], { weekday: "short" }),
@@ -79,19 +101,18 @@ export const fetchWeatherData = async (city: string) => {
         icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
       }));
 
-      return {
-        city: currentWeather.name,
-        currentTemp: `${Math.round(currentWeather.main.temp)}°`,
-        chanceOfRain: `${currentWeather.rain ? currentWeather.rain["1h"] || 0 : 0}%`,
-        realFeel: `${Math.round(currentWeather.main.feels_like)}°`,
-        wind: `${currentWeather.wind.speed} km/h`,
-
-        uvIndex: "3", // Example placeholder
-        hourlyForecast,
-        weeklyForecast,
+    return {
+      city: currentWeather.name,
+      currentTemp: `${Math.round(currentWeather.main.temp)}°`,
+      chanceOfRain: `${currentWeather.rain ? currentWeather.rain["1h"] || 0 : 0}%`,
+      realFeel: `${Math.round(currentWeather.main.feels_like)}°`,
+      wind: `${currentWeather.wind.speed} km/h`,
+      uvIndex: "3", // Example placeholder
+      hourlyForecast,
+      weeklyForecast,
     };
-} catch (error) {
-  console.error("Error fetching weather data:", error);
-  throw error;
-}
+  } catch (error) {
+    console.error("Error fetching weather data:", error);
+    throw error;
+  }
 };
