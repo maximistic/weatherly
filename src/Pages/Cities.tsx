@@ -16,7 +16,7 @@ type City = {
 const Cities = ({ searchQuery }: { searchQuery: string }) => {
   const { cities, addCity, deleteCity } = useCities();
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
-  const [ setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null); // Fixed this line
 
   useEffect(() => {
     if (searchQuery) {
