@@ -1,8 +1,7 @@
 "use client";
-
+import React, { useState } from "react";
 import localFont from "next/font/local";
-import { useState } from "react";
-import { FiCloud, FiSettings, FiSearch, FiSun, FiMoon } from "react-icons/fi";
+import { FiCloud, FiSettings, FiSearch, FiMenu } from "react-icons/fi";
 import { FaCity } from "react-icons/fa";
 import Weather from "../Pages/Weather";
 import Cities from "../Pages/Cities";
@@ -21,8 +20,8 @@ const geistMono = localFont({
 });
 
 export default function RootLayout() {
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  const [currentView, setCurrentView] = useState("Weather"); // Tracks which content to show
+  const [currentView, setCurrentView] = useState("Weather");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // For hamburger menu
 
   const renderContent = () => {
     switch (currentView) {
@@ -40,12 +39,14 @@ export default function RootLayout() {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900 text-white`}
       >
-        <div className="flex h-screen p-8 rounded-md">
+        <div className="flex h-screen p-4 sm:p-8 rounded-md">
           {/* Sidebar */}
           <div
-            className={`p-5 w-20 sm:w-40 transition-all duration-300 rounded-lg mr-8 ${isDarkMode ? "bg-gray-800" : "bg-gray-200"}`}
+            className={`${
+              isSidebarOpen ? "block" : "hidden"
+            } sm:block p-5 w-16 sm:w-40 transition-all duration-300 rounded-lg mr-4 sm:mr-8 ${"bg-gray-800"}`}
           >
             {/* Logo */}
             <h1 className="text-center text-xl font-bold mt-2 sm:block hidden cursor-none">
@@ -73,43 +74,37 @@ export default function RootLayout() {
                 onClick={() => setCurrentView("Settings")}
               />
             </div>
-
-            {/* Theme Toggle */}
-            <div className="absolute bottom-8 left-8 pl-14 pb-10">
-              <button
-                className="rounded-md hover:bg-gray-600"
-                onClick={() => setIsDarkMode(!isDarkMode)}
-              >
-                {isDarkMode ? <FiSun size={24} /> : <FiMoon size={24} />}
-              </button>
-            </div>
           </div>
 
+
           {/* Main Content */}
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col w-full">
             {/* Searchbar */}
             <div
-              className={`p-4 flex items-center space-x-4 rounded-lg mb-8 ${
-                isDarkMode ? "bg-gray-800" : "bg-gray-200"
-              }`}
+              className={`p-4 flex items-center space-x-4 rounded-lg mb-8 ${"bg-gray-800"}`}
             >
+              <div className="sm:hidden absolute top-4 left-4 z-10 pl-5 pt-5 pr-5">
+                <button
+                  className="text-white"
+                  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                >
+                  <FiMenu size={28} />
+                </button>
+              </div>
+
               <input
                 type="text"
                 placeholder="Search for cities"
-                className={`px-4 py-2 rounded-md flex-1 ${
-                  isDarkMode
-                    ? "bg-gray-700 text-white border border-gray-600"
-                    : "bg-gray-200 text-gray-900 border border-gray-600"
-                }`}
+                className={`px-4 py-2rounded-md flex-1 ${"bg-gray-700 text-white border border-gray-600"}`}
               />
               <FiSearch
                 size={28}
-                className={`cursor-pointer ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
+                className={`cursor-pointer text-gray-400`}
               />
             </div>
 
             {/* Render Dynamic Content */}
-            <div className="p-8 flex-1 overflow-auto">{renderContent()}</div>
+            <div className="p-4 sm:p-8 flex-1 overflow-auto">{renderContent()}</div>
           </div>
         </div>
       </body>

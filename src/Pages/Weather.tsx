@@ -1,17 +1,19 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { WiRaindrop, WiThermometer, WiStrongWind, WiDaySunny } from "react-icons/wi";
+import { WiThermometer, WiStrongWind, WiSunrise, WiSunset, WiThermometerExterior, WiThermometerInternal } from "react-icons/wi";
 import { fetchWeatherData, fetchGeolocation, HourlyForecast, WeeklyForecast } from "../utils/data";
 
 const Weather = () => {
   const [weatherData, setWeatherData] = useState<{
     city: string;
     currentTemp: string;
-    chanceOfRain: string;
+    temp_max: string;
+    temp_min: string;
     realFeel: string;
     wind: string;
-    uvIndex: string;
+    sunrise: string;
+    sunset: string;
     hourlyForecast: HourlyForecast[];
     weeklyForecast: WeeklyForecast[];
   } | null>(null);
@@ -62,12 +64,21 @@ const Weather = () => {
   return (
     <div className="p-6 bg-gray-900 text-white font-[family-name:var(--font-geist-sans)]">
       {/* Weather Data Display */}
-      <div className="grid lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="sm:col-span-2 lg:col-span-2">
           <div className="flex justify-between items-center mb-8">
             <div>
               <h1 className="text-3xl font-bold">{weatherData?.city}</h1>
-              <p className="text-gray-400">Chance of rain: {weatherData?.chanceOfRain}</p>
+              <div className="flex items-center space-x-4 mt-2">
+                <div className="flex items-center">
+                  <WiThermometerExterior className="mr-2 text-red-400" />
+                  <span>{weatherData?.temp_max}</span>
+                </div>
+                <div className="flex items-center">
+                  <WiThermometerInternal className="mr-2 text-blue-400" />
+                  <span>{weatherData?.temp_min}</span>
+                </div>
+              </div>
               <h2 className="text-6xl font-bold mt-4">{weatherData?.currentTemp}</h2>
             </div>
             <Image
@@ -102,9 +113,9 @@ const Weather = () => {
           </div>
 
           {/* Air Conditions */}
-          <div className="mb-8">
+          <div className="mb-8 lg:mb-0">
             <h3 className="text-lg font-semibold mb-4">Air Conditions</h3>
-            <div className="grid grid-cols-2 gap-4 bg-gray-800 p-4 rounded-lg">
+            <div className="grid grid-cols-2 gap-4 bg-gray-800 p-4 rounded-lg h-full">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-400">Real Feel</p>
@@ -121,26 +132,26 @@ const Weather = () => {
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-400">Chance of rain</p>
-                  <h4 className="font-bold text-lg">{weatherData?.chanceOfRain}</h4>
+                  <p className="text-sm text-gray-400">Sunrise</p>
+                  <h4 className="font-bold text-lg">{weatherData?.sunrise}</h4>
                 </div>
-                <WiRaindrop className="text-4xl text-blue-400" />
+                <WiSunrise className="text-4xl text-yellow-400" />
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-400">UV Index</p>
-                  <h4 className="font-bold text-lg">{weatherData?.uvIndex}</h4>
+                  <p className="text-sm text-gray-400">Sunset</p>
+                  <h4 className="font-bold text-lg">{weatherData?.sunset}</h4>
                 </div>
-                <WiDaySunny className="text-4xl text-yellow-400" />
+                <WiSunset className="text-4xl text-orange-400" />
               </div>
             </div>
           </div>
         </div>
 
         {/* Weekly Forecast */}
-        <div>
-          <h3 className="text-lg font-semibold mb-4">7-Day Forecast</h3>
-          <div className="bg-gray-800 p-4 rounded-lg">
+        <div className="lg:col-span-1 sm:col-span-2">
+          <h3 className="text-lg font-semibold mb-4">5-Day Forecast</h3>
+          <div className="bg-gray-800 p-4 rounded-lg ">
             {weatherData?.weeklyForecast.map((day, index) => (
               <div
                 key={index}

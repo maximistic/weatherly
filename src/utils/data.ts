@@ -41,6 +41,8 @@ interface CurrentWeatherData {
   main: {
     temp: number;
     feels_like: number;
+    temp_max: number;
+    temp_min: number;
   };
   wind: {
     speed: number;
@@ -63,7 +65,6 @@ export const fetchGeolocation = async (): Promise<{ city: string; lat: number; l
         (error) => {
           console.error("Geolocation failed:", error);
 
-          // Geolocation-specific errors
           let errorMessage;
           switch (error.code) {
             case error.PERMISSION_DENIED:
@@ -92,7 +93,6 @@ export const fetchGeolocation = async (): Promise<{ city: string; lat: number; l
   });
 };
 
-
 export const fetchWeatherData = async (city?: string, lat?: number, lon?: number) => {
   let currentWeatherUrl, forecastUrl;
 
@@ -115,8 +115,12 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
     const currentWeather = currentWeatherResponse.data as CurrentWeatherData;
     const forecastData = forecastResponse.data as ForecastData;
 
+    // Convert sunrise and sunset from UNIX timestamps to readable time
+    const sunrise = new Date(currentWeather.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const sunset = new Date(currentWeather.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
     const hourlyForecast: HourlyForecast[] = forecastData.list.slice(0, 6).map((item: WeatherData) => ({
-      time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       temp: `${Math.round(item.main.temp)}°`,
       icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
     }));
@@ -125,7 +129,7 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
       .filter((_item: WeatherData, index: number) => index % 8 === 0)
       .slice(0, 7)
       .map((item: WeatherData) => ({
-        day: new Date(item.dt * 1000).toLocaleDateString([], { weekday: "short" }),
+        day: new Date(item.dt * 1000).toLocaleDateString([], { weekday: 'short' }),
         condition: item.weather[0].main,
         temp: `${Math.round(item.main.temp_max)}/${Math.round(item.main.temp_min)}`,
         icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
@@ -134,10 +138,12 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
     return {
       city: currentWeather.name,
       currentTemp: `${Math.round(currentWeather.main.temp)}°`,
-      chanceOfRain: `${currentWeather.rain ? currentWeather.rain["1h"] || 0 : 0}%`,
+      temp_max: `${Math.round(currentWeather.main.temp_max)}°`, 
+      temp_min: `${Math.round(currentWeather.main.temp_min)}°`, 
       realFeel: `${Math.round(currentWeather.main.feels_like)}°`,
       wind: `${currentWeather.wind.speed} km/h`,
-      uvIndex: "3", // Example placeholder
+      sunrise,
+      sunset,
       hourlyForecast,
       weeklyForecast,
     };
