@@ -4,9 +4,9 @@ import localFont from "next/font/local";
 import { useState } from "react";
 import { FiCloud, FiSettings, FiSearch, FiSun, FiMoon } from "react-icons/fi";
 import { FaCity } from "react-icons/fa";
-import Weather from "@/Pages/Weather";
-import Cities from "@/Pages/Cities";
-import Settings from "@/Pages/Settings";
+import Weather from "../Pages/Weather";
+import Cities from "../Pages/Cities";
+import Settings from "../Pages/Settings";
 import "./globals.css";
 
 const geistSans = localFont({

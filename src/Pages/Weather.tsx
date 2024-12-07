@@ -36,8 +36,28 @@ const Weather = () => {
     getWeather();
   }, []);
 
+  const handleRetry = async () => {
+    setError(null);
+    setLoading(true);
+    try {
+      const geolocation = await fetchGeolocation();
+      const data = await fetchWeatherData(undefined, geolocation.lat, geolocation.lon);
+      setWeatherData(data);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching weather data:", err);
+      setError("Failed to fetch weather data.");
+      setLoading(false);
+    }
+  };
+
   if (loading) return <div className="text-white">Loading...</div>;
-  if (error) return <div className="text-white">{error}</div>;
+  if (error) return (
+    <div>
+      <p>{error}</p>
+      <button onClick={handleRetry}>Retry</button>
+    </div>
+  );
 
   return (
     <div className="p-6 bg-gray-900 text-white font-[family-name:var(--font-geist-sans)]">

@@ -49,7 +49,6 @@ interface CurrentWeatherData {
     [key: string]: number;
   };
 }
-
 export const fetchGeolocation = async (): Promise<{ city: string; lat: number; lon: number }> => {
   return new Promise((resolve) => {
     if ("geolocation" in navigator) {
@@ -71,17 +70,17 @@ export const fetchGeolocation = async (): Promise<{ city: string; lat: number; l
               errorMessage = "Permission denied for accessing geolocation.";
               break;
             case error.POSITION_UNAVAILABLE:
-              errorMessage = "Position unavailable.";
+              errorMessage = "Position unavailable. Please ensure your device has a working GPS or try again later.";
               break;
             case error.TIMEOUT:
-              errorMessage = "Geolocation request timed out.";
+              errorMessage = "Geolocation request timed out. Please try again.";
               break;
             default:
               errorMessage = "An unknown error occurred.";
           }
           console.warn(errorMessage);
 
-          // Fallback to default location
+          // Fallback to default location (Coimbatore) if geolocation fails
           resolve({ city: "Coimbatore", lat: 11.0168, lon: 76.9858 });
         }
       );
@@ -92,6 +91,7 @@ export const fetchGeolocation = async (): Promise<{ city: string; lat: number; l
     }
   });
 };
+
 
 export const fetchWeatherData = async (city?: string, lat?: number, lon?: number) => {
   let currentWeatherUrl, forecastUrl;
