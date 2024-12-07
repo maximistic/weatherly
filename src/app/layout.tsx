@@ -85,27 +85,24 @@ export default function RootLayout() {
           {/* Main Content */}
           <div className="flex-1 flex flex-col w-full">
             <div
-              className={`p-4 flex items-center space-x-4 rounded-lg mb-8 bg-gray-800`}
+              className={`p-4 flex items-center space-x-4 rounded-lg mb-8 bg-gray-800 relative`}
             >
-              <div className="sm:hidden absolute top-4 left-4 z-10 pl-5 pt-5 pr-5">
+              <div className="sm:hidden absolute top-1/2 left-7 -translate-y-1/2 z-10">
                 <button
-                  className="text-white"
+                  className="text-white p-2 rounded-md hover:text-red-500"
                   onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                 >
-                  <FiMenu size={28} />
+                  <FiMenu size={24} />
                 </button>
               </div>
               <input
                 type="text"
                 placeholder="Search by city or ZIP"
-                className="px-4 py-2 rounded-md flex-1 bg-gray-700 text-white border border-gray-600"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleSearch((e.target as HTMLInputElement).value);
-                }}
+                className="px-4 py-2 rounded-md flex-1 bg-gray-700 text-white border border-gray-600 pl-12"
               />
               <FiSearch
-                size={28}
-                className="cursor-pointer text-gray-400"
+                size={24}
+                className="cursor-pointer text-gray-400 hover:text-red-500"
                 onClick={() => {
                   const input = document.querySelector<HTMLInputElement>("input");
                   if (input) handleSearch(input.value);
@@ -135,8 +132,8 @@ function SidebarButton({
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-center hover:bg-gray-700 rounded-md p-2 w-full hover:text-gray-50 ${
-        isActive ? "bg-gray-700 text-gray-50" : ""
+      className={`flex flex-col items-center hover:text-red-500 rounded-md p-3 w-full ${
+        isActive ? " text-red-500 " : ""
       }`}
     >
       {icon}
