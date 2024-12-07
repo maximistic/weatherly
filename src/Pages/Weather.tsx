@@ -7,12 +7,16 @@ import {
   WiSunrise,
   WiSunset,
 } from "react-icons/wi";
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from "chart.js";
+import { Line } from "react-chartjs-2";
 import {
   fetchWeatherData,
   fetchGeolocation,
   HourlyForecast,
   WeeklyForecast,
 } from "../utils/data";
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const Weather = ({ searchQuery }: { searchQuery: string }) => {
   const [weatherData, setWeatherData] = useState<{
@@ -30,6 +34,7 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showChart, setShowChart] = useState(false);
 
   const fetchData = async (query?: string) => {
     setLoading(true);
@@ -66,6 +71,63 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
         </button>
       </div>
     );
+
+  const chartData = {
+    labels: weatherData?.weeklyForecast.map((day) => day.day),
+    datasets: [
+      {
+        label: "Temperature",
+        data: weatherData?.weeklyForecast.map((day) =>
+          parseInt(day.temp.replace("°", ""))
+        ),
+        fill: true,
+        borderColor: "#4F46E5",
+        backgroundColor: "rgba(79, 70, 229, 0.2)",
+        pointBackgroundColor: "#4F46E5",
+        pointBorderColor: "#fff",
+        tension: 0.4,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: (tooltipItem: any) => {
+            const dayData = weatherData?.weeklyForecast[tooltipItem.dataIndex];
+            return `${dayData?.day}: ${dayData?.temp}, ${dayData?.condition}`;
+          },
+        },
+      },
+      legend: {
+        display: true,
+        position: "top",
+        labels: {
+          color: "#fff",
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: "#fff",
+        },
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        ticks: {
+          color: "#fff",
+        },
+        grid: {
+          color: "#555",
+        },
+      },
+    },
+  };
 
   return (
     <div className="p-6 bg-gray-900 text-white font-[family-name:var(--font-geist-sans)]">
@@ -156,25 +218,40 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
 
         {/* Weekly Forecast */}
         <div className="lg:col-span-1 sm:col-span-2">
-          <h3 className="text-lg font-semibold mb-4">5-Day Forecast</h3>
-          <div className="bg-gray-800 p-4 rounded-lg ">
-            {weatherData?.weeklyForecast.map((day, index) => (
-              <div
-                key={index}
-                className="flex justify-between items-center border-b border-gray-700 py-2 last:border-b-0"
-              >
-                <p className="font-bold">{day.day}</p>
-                <Image
-                  src={day.icon}
-                  alt={day.condition}
-                  width={32}
-                  height={32}
-                />
-                <p className="text-gray-400">{day.condition}</p>
-                <p className="font-bold">{day.temp}</p>
-              </div>
-            ))}
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">5-Day Forecast</h3>
+            <button
+              className="bg-blue-600 text-white px-4 py-2 rounded-md"
+              onClick={() => setShowChart((prev) => !prev)}
+            >
+              {showChart ? "Hide Chart" : "Show Chart"}
+            </button>
           </div>
+
+          {showChart ? (
+            <div className="bg-gray-800 p-4 rounded-lg">
+              <Line data={chartData} options={chartOptions} />
+            </div>
+          ) : (
+            <div className="bg-gray-800 p-4 rounded-lg">
+              {weatherData?.weeklyForecast.map((day, index) => (
+                <div
+                  key={index}
+                  className="flex justify-between items-center border-b border-gray-700 py-2 last:border-b-0"
+                >
+                  <p className="font-bold">{day.day}</p>
+                  <Image
+                    src={day.icon}
+                    alt={day.condition}
+                    width={32}
+                    height={32}
+                  />
+                  <p className="text-gray-400">{day.condition}</p>
+                  <p className="font-bold">{day.temp}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

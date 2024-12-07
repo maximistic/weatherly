@@ -8,7 +8,7 @@ import Cities from "../Pages/Cities";
 import Settings from "../Pages/Settings";
 import "./globals.css";
 import { SettingsProvider } from "../context/SettingsContext";
-import { CitiesProvider } from "../context/CitiesContext"; // Import CitiesProvider
+import { CitiesProvider } from "../context/CitiesContext"; 
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,7 +26,6 @@ export default function RootLayout() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Load the last selected view from localStorage when the app loads
   useEffect(() => {
     const savedView = localStorage.getItem("currentView");
     if (savedView) {

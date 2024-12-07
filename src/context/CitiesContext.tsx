@@ -1,4 +1,3 @@
-// context/CitiesContext.tsx
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 type City = {
