@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { fetchWeatherData } from "../utils/data";
 import { FiTrash } from "react-icons/fi";
@@ -16,7 +16,7 @@ type City = {
 const Cities = ({ searchQuery }: { searchQuery: string }) => {
   const { cities, addCity, deleteCity } = useCities();
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [ error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (searchQuery) {
@@ -24,7 +24,7 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
     }
   }, [searchQuery]);
 
-  const handleAddCity = async (query: string) => {
+  const handleAddCity = useCallback(async (query: string) => {
     if (cities.length >= 5) {
       setError("Maximum 5 cities allowed. Delete one to add another.");
       return;
@@ -38,7 +38,7 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
         minute: "2-digit",
         hour12: true,
       });
-
+  
       const newCity: City = {
         name: weatherData.city,
         temp: weatherData.currentTemp,
@@ -47,18 +47,19 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
         timezone: cityTimezone,
         hourlyForecast: weatherData.hourlyForecast.slice(0, 6),
       };
-
+  
       if (cities.some((city) => city.name === newCity.name)) {
         setError("City already added.");
         return;
       }
-
+  
       addCity(newCity);
       setError(null);
     } catch {
       setError("City not found or API error. Please try again.");
     }
-  };
+  }, [cities, addCity]);
+  
 
   const handleDeleteCity = (cityName: string) => {
     deleteCity(cityName);
@@ -69,6 +70,7 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
     <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 p-4 sm:p-8">
       <div className="flex-1 space-y-4">
         <h2 className="text-xl font-bold">Your Cities</h2>
+        {error && <p className="text-red-500 text-sm">{error}</p>}
         {cities.map((city, index) => (
           <div
             key={index}
