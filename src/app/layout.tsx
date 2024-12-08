@@ -33,22 +33,21 @@ export default function RootLayout() {
     }
   }, []);
 
-  // Save the current view to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("currentView", currentView);
   }, [currentView]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    if (currentView === "Cities") return; // Allow search functionality in Cities tab
-    setCurrentView("Weather"); // Switch to Weather view
+    if (currentView === "Cities") return; 
+    setCurrentView("Weather"); 
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       const input = e.target as HTMLInputElement;
-      handleSearch(input.value); // Perform the search
-      input.value = ""; // Clear the search input
+      handleSearch(input.value); 
+      input.value = ""; 
     }
   };
 
@@ -104,7 +103,7 @@ export default function RootLayout() {
                 </div>
               </div>
 
-              {/* Main Content */}
+              {/* Top Bar */}
               <div className="flex-1 flex flex-col w-full">
                 <div
                   className={`p-4 flex items-center space-x-4 rounded-lg  bg-gray-800 relative`}
@@ -121,7 +120,7 @@ export default function RootLayout() {
                     type="text"
                     placeholder="Search by city or ZIP"
                     className="px-4 py-2 rounded-md flex-1 bg-gray-700 text-white border border-gray-600 pl-12"
-                    onKeyDown={handleKeyDown} // Handle Enter key
+                    onKeyDown={handleKeyDown} 
                   />
                   <FiSearch
                     size={24}
@@ -131,8 +130,8 @@ export default function RootLayout() {
                         "input"
                       );
                       if (input) {
-                        handleSearch(input.value); // Perform the search
-                        input.value = ""; // Clear the search input
+                        handleSearch(input.value); 
+                        input.value = ""; 
                       }
                     }}
                   />
