@@ -22,6 +22,7 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
   const handleAddCity = useCallback(async (query: string) => {
     if (cities.length >= 5) {
       setError("Maximum 5 cities allowed. Delete one to add another.");
+      setTimeout(() => setError(null), 3000); // Hide error after 3 seconds
       return;
     }
     try {
@@ -43,15 +44,11 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
         hourlyForecast: weatherData.hourlyForecast.slice(0, 6),
       };
 
-      if (cities.some((city) => city.name === newCity.name)) {
-        setError("City already added.");
-        return;
-      }
-
       addCity(newCity);
       setError(null);
     } catch {
       setError("City not found or API error. Please try again.");
+      setTimeout(() => setError(null), 3000); // Hide error after 3 seconds
     }
   }, [cities, addCity]);
 
@@ -70,7 +67,11 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
     <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 p-4 sm:p-8">
       <div className="flex-1 space-y-4">
         <h2 className="text-xl font-bold">Your Cities</h2>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
+        {error && (
+          <p className="text-red-500 text-sm absolute top-0 right-0 mt-4 mr-4 p-2 bg-gray-800 rounded-md">
+            {error}
+          </p>
+        )}
         {cities.map((city, index) => (
           <div
             key={index}
@@ -114,43 +115,49 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
           </p>
         )}
       </div>
-      {selectedCity && (
-        <div className="flex-1 sm:max-w-sm p-4 rounded-lg bg-gray-900 border border-gray-700 space-y-4">
-          <h2 className="text-lg font-bold">{selectedCity.name} Details</h2>
-          <div className="flex items-center gap-4">
-            <Image
-              src={selectedCity.icon}
-              alt={`${selectedCity.name} weather`}
-              width={50}
-              height={50}
-              className="w-12 h-12"
-            />
-            <div>
-              <p className="text-xl font-bold">{selectedCity.temp}</p>
-              <p className="text-gray-400 text-sm">{selectedCity.time}</p>
-            </div>
-          </div>
-          <h3 className="text-md font-bold">Hourly Forecast</h3>
-          <div className="grid grid-cols-3 sm:grid-cols-2 gap-4">
-            {selectedCity.hourlyForecast.map((hour, index) => (
-              <div
-                key={index}
-                className="flex flex-col items-center bg-gray-800 p-2 rounded-lg"
-              >
-                <p className="text-sm font-bold">{hour.time}</p>
-                <Image
-                  src={hour.icon}
-                  alt="Weather Icon"
-                  width={30}
-                  height={30}
-                  className="w-8 h-8"
-                />
-                <p className="text-sm">{hour.temp}</p>
+      <div
+        className={`${
+          selectedCity ? "block" : "hidden"
+        } flex flex-col sm:flex-1 sm:max-w-sm p-4 rounded-lg bg-gray-900 border border-gray-700 space-y-4 mt-4 sm:mt-0`}
+      >
+        {selectedCity && (
+          <>
+            <h2 className="text-lg font-bold">{selectedCity.name} Details</h2>
+            <div className="flex items-center gap-4">
+              <Image
+                src={selectedCity.icon}
+                alt={`${selectedCity.name} weather`}
+                width={50}
+                height={50}
+                className="w-12 h-12"
+              />
+              <div>
+                <p className="text-xl font-bold">{selectedCity.temp}</p>
+                <p className="text-gray-400 text-sm">{selectedCity.time}</p>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+            </div>
+            <h3 className="text-md font-bold">Hourly Forecast</h3>
+            <div className="grid grid-cols-3 sm:grid-cols-2 gap-4">
+              {selectedCity.hourlyForecast.map((hour, index) => (
+                <div
+                  key={index}
+                  className="flex flex-col items-center bg-gray-800 p-2 rounded-lg"
+                >
+                  <p className="text-sm font-bold">{hour.time}</p>
+                  <Image
+                    src={hour.icon}
+                    alt="Weather Icon"
+                    width={30}
+                    height={30}
+                    className="w-8 h-8"
+                  />
+                  <p className="text-sm">{hour.temp}</p>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };

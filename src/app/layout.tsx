@@ -44,6 +44,14 @@ export default function RootLayout() {
     setCurrentView("Weather"); // Switch to Weather view
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const input = e.target as HTMLInputElement;
+      handleSearch(input.value); // Perform the search
+      input.value = ""; // Clear the search input
+    }
+  };
+
   const renderContent = () => {
     switch (currentView) {
       case "Weather":
@@ -113,6 +121,7 @@ export default function RootLayout() {
                     type="text"
                     placeholder="Search by city or ZIP"
                     className="px-4 py-2 rounded-md flex-1 bg-gray-700 text-white border border-gray-600 pl-12"
+                    onKeyDown={handleKeyDown} // Handle Enter key
                   />
                   <FiSearch
                     size={24}
@@ -121,7 +130,10 @@ export default function RootLayout() {
                       const input = document.querySelector<HTMLInputElement>(
                         "input"
                       );
-                      if (input) handleSearch(input.value);
+                      if (input) {
+                        handleSearch(input.value); // Perform the search
+                        input.value = ""; // Clear the search input
+                      }
                     }}
                   />
                 </div>
