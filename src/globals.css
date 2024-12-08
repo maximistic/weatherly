@@ -23,7 +23,7 @@
       margin-right: 0 !important;
     }
   }
-  @media screen {
+  @media screen and (max-width: 768px){
     body {
       transform: scale(0.9);
       transform-origin: 0 0;
