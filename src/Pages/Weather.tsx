@@ -269,32 +269,34 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
 
       {/* Map and 5-Day Forecast */}
       <div>
-        <h3 className="text-lg font-semibold mb-4">Location Map</h3>
-        {weatherData?.city && weatherData?.lat && weatherData?.lon ? (
-          <MapComponent lat={weatherData.lat} lon={weatherData.lon} />
-        ) : (
-          <p>Map unavailable for this location.</p>
-        )}
-        <h3 className="text-lg font-semibold mt-20">5-Day Forecast</h3>
-        <div className="bg-gray-800 p-4 rounded-lg ">
-          {weatherData?.weeklyForecast.map((day, index) => (
-            <div
-              key={index}
-              className="flex justify-between items-center border-b border-gray-700 py-2 last:border-b-0"
-            >
-              <p className="font-bold">{day.day}</p>
-              <Image
-                src={day.icon}
-                alt={day.condition}
-                width={32}
-                height={32}
-              />
-              <p className="text-gray-400">{day.condition}</p>
-              <p className="font-bold">
-                {day.temp || "--"}
-              </p>
-            </div>
-          ))}
+      <h3 className="text-lg font-semibold mb-4">5-Day Forecast</h3>
+          <div className="bg-gray-800 p-4 rounded-lg">
+          {weatherData?.weeklyForecast.map((day, index) => {
+            // Extract and convert both parts of the temperature (before and after the slash)
+            const splitTemp = day.temp ? day.temp.split("/") : [];
+            const convertedTemp = splitTemp.length === 2
+              ? `${convertTemperature(parseFloat(splitTemp[0]))}/${convertTemperature(parseFloat(splitTemp[1]))}`
+              : undefined;
+
+            return (
+              <div
+                key={index}
+                className="flex justify-between items-center border-b border-gray-700 py-2 last:border-b-0"
+              >
+                <p className="font-bold">{day.day}</p>
+                <Image
+                  src={day.icon} 
+                  alt={day.condition}
+                  width={32}
+                  height={32}
+                />
+                <p className="text-gray-400">{day.condition}</p>
+                <p className="font-bold">
+                  {convertedTemp || day.temp} 
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
