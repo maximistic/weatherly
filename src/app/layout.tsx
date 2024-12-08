@@ -6,7 +6,7 @@ import { FaCity } from "react-icons/fa";
 import Weather from "../Pages/Weather";
 import Cities from "../Pages/Cities";
 import Settings from "../Pages/Settings";
-import "./globals.css";
+import "../globals.css";
 import { SettingsProvider } from "../context/SettingsContext";
 import { CitiesProvider } from "../context/CitiesContext"; 
 
