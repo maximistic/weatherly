@@ -3,10 +3,9 @@ import Image from "next/image";
 import { fetchWeatherData } from "../utils/data";
 import { FiTrash } from "react-icons/fi";
 import { useCities } from "../context/CitiesContext";
-import { useSettings } from "../context/SettingsContext"; // Import useSettings hook
+import { useSettings } from "../context/SettingsContext";
 import "../globals.css";
 
-// Convert temperature from Celsius to Fahrenheit or vice versa
 const convertTemperature = (temp: number | string, toUnit: "Celsius" | "Fahrenheit"): string => {
   if (typeof temp === "string" || temp === undefined) return temp.toString();
 
@@ -14,17 +13,6 @@ const convertTemperature = (temp: number | string, toUnit: "Celsius" | "Fahrenhe
     return ((temp * 9) / 5 + 32).toFixed(1); // Convert to Fahrenheit
   } else {
     return (((temp - 32) * 5) / 9).toFixed(1); // Convert to Celsius
-  }
-};
-
-// Convert wind speed from km/h to m/s or knots
-const convertWindSpeed = (speed: number, toUnit: "km/h" | "m/s" | "Knots"): string => {
-  if (toUnit === "m/s") {
-    return (speed / 3.6).toFixed(2); // km/h to m/s
-  } else if (toUnit === "Knots") {
-    return (speed / 1.852).toFixed(2); // km/h to Knots
-  } else {
-    return speed.toFixed(2); // km/h
   }
 };
 
@@ -51,20 +39,11 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
     }
     try {
       const weatherData = await fetchWeatherData(query);
-      const cityTimezone = weatherData.timezone || "UTC";
-      const cityDate = new Date().toLocaleString("en-US", {
-        timeZone: cityTimezone,
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      });
 
       const newCity: City = {
         name: weatherData.city,
         temp: weatherData.currentTemp,
         icon: weatherData.hourlyForecast[0]?.icon || "",
-        time: cityDate,
-        timezone: cityTimezone,
         hourlyForecast: weatherData.hourlyForecast.slice(0, 6),
       };
 
@@ -129,7 +108,6 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
               />
               <div>
                 <h3 className="text-lg font-bold">{city.name}</h3>
-                <p className="text-sm text-gray-400">{city.time}</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -175,7 +153,6 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
                   {convertTemperature(Number(selectedCity.temp), temperatureUnit)}°
                   {temperatureUnit === "Celsius" ? "C" : "F"}
                 </p>
-                <p className="text-gray-400 text-sm">{selectedCity.time}</p>
               </div>
             </div>
             <h3 className="text-md font-bold">Hourly Forecast</h3>
