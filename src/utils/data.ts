@@ -1,4 +1,5 @@
 import axios from "axios";
+import { time } from "console";
 
 const API_KEY = "af05fb7faf92f827af6f0f25123dc259"; 
 const BASE_URL = "https://api.openweathermap.org/data/2.5/";
@@ -119,6 +120,7 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
       sunset,
       hourlyForecast,
       weeklyForecast,
+      timezone: currentWeather.timezone,
     };
   } catch (error) {
     console.error("Error fetching weather data:", error);

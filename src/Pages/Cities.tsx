@@ -1,14 +1,23 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
-import { fetchWeatherData } from "../utils/data";
+import { fetchWeatherData, HourlyForecast } from "../utils/data";
 import { FiTrash } from "react-icons/fi";
 import { useCities } from "../context/CitiesContext";
 
-type City = {
+export type City = {
   name: string;
   temp: string;
+  currentTemp: string;
   icon: string;
-  hourlyForecast: { time: string; temp: string; icon: string }[];
+  time: string;
+  timezone: number;
+  temp_max: string;
+  temp_min: string;
+  realFeel: string;
+  wind: string;
+  sunrise: string;
+  sunset: string;
+  hourlyForecast: HourlyForecast[];
 };
 
 const Cities = ({ searchQuery }: { searchQuery: string }) => {
@@ -31,14 +40,22 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
       const weatherData = await fetchWeatherData(query);
       const newCity: City = {
         name: weatherData.city,
-        temp: weatherData.currentTemp,
+        currentTemp: weatherData.currentTemp,
         icon: weatherData.hourlyForecast[0]?.icon || "",
-        hourlyForecast: weatherData.hourlyForecast.slice(0, 6),
+        hourlyForecast: weatherData.hourlyForecast,
+        temp_max: weatherData.temp_max,
+        temp_min: weatherData.temp_min,
+        realFeel: weatherData.realFeel,
+        wind: weatherData.wind,
+        sunrise: weatherData.sunrise,
+        sunset: weatherData.sunset
       };
+
       if (cities.some((city) => city.name === newCity.name)) {
         setError("City already added.");
         return;
       }
+
       addCity(newCity);
       setError(null);
     } catch {
@@ -76,10 +93,11 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
               />
               <div>
                 <h3 className="text-lg font-bold">{city.name}</h3>
+                <p className="text-sm text-gray-400">{city.currentTemp}</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="text-xl font-semibold">{city.temp}</div>
+              <div className="text-xl font-semibold">{city.currentTemp}</div>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -101,18 +119,35 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
       {selectedCity && (
         <div className="flex-1 sm:max-w-sm p-4 rounded-lg bg-gray-900 border border-gray-700 space-y-4">
           <h2 className="text-lg font-bold">{selectedCity.name} Details</h2>
-          <div className="flex items-center gap-4">
-            <Image
-              src={selectedCity.icon}
-              alt={`${selectedCity.name} weather`}
-              width={50}
-              height={50}
-              className="w-12 h-12"
-            />
-            <div>
-              <p className="text-xl font-bold">{selectedCity.temp}</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Image
+                src={selectedCity.icon}
+                alt={`${selectedCity.name} weather`}
+                width={50}
+                height={50}
+                className="w-12 h-12"
+              />
+              <div>
+                <p className="text-xl font-bold">{selectedCity.currentTemp}</p>
+                <div className="text-sm text-gray-400">
+                  <span>H: {selectedCity.temp_max}</span>
+                  <span className="mx-2">|</span>
+                  <span>L: {selectedCity.temp_min}</span>
+                </div>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-sm text-gray-400">Real Feel: {selectedCity.realFeel}</p>
+              <p className="text-sm text-gray-400">Wind: {selectedCity.wind}</p>
             </div>
           </div>
+
+          <div className="flex justify-between text-sm text-gray-400">
+            <p>Sunrise: {selectedCity.sunrise}</p>
+            <p>Sunset: {selectedCity.sunset}</p>
+          </div>
+
           <h3 className="text-md font-bold">Hourly Forecast</h3>
           <div className="grid grid-cols-3 sm:grid-cols-2 gap-4">
             {selectedCity.hourlyForecast.map((hour, index) => (
