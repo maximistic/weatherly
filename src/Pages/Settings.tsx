@@ -17,14 +17,14 @@ const Settings = () => {
 
   return (
     <div className="p-8 bg-gray-900 text-white font-[family-name:var(--font-geist-sans)] rounded-lg">
-      {/* Units Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="md:col-span-2 bg-gray-800 p-6 rounded-lg">
-          <h2 className="text-xl font-bold mb-6">Units</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {/* Units Section */}
+        <div className="bg-gray-800 p-6 rounded-lg">
+          <h2 className="text-xl font-bold mb-4">Units</h2>
           {/* Temperature */}
-          <div className="mb-6">
+          <div className="mb-4">
             <p className="font-semibold mb-2">TEMPERATURE</p>
-            <div className="flex space-x-4">
+            <div className="flex space-x-2">
               {["Celsius", "Fahrenheit"].map((unit) => (
                 <button
                   key={unit}
@@ -43,7 +43,7 @@ const Settings = () => {
           {/* Wind Speed */}
           <div>
             <p className="font-semibold mb-2">WIND SPEED</p>
-            <div className="flex space-x-4">
+            <div className="flex space-x-2">
               {["km/h", "m/s", "Knots"].map((unit) => (
                 <button
                   key={unit}
@@ -60,36 +60,35 @@ const Settings = () => {
             </div>
           </div>
         </div>
-        {/* Advanced Card */}
-        <div className="space-y-6">
-          <div className="bg-gray-800 p-6 rounded-lg">
-            <h2 className="text-xl font-bold mb-4">Advanced</h2>
-            <ul className="text-gray-400 mb-6">
-              <li>Ad-free</li>
-              <li>Health activities overview</li>
-              <li>Severe weather notifications</li>
-            </ul>
-            <button className="w-full py-3 bg-blue-600 text-white rounded-lg text-lg font-bold">
-              $5.99/month
-            </button>
-          </div>
 
-          {/* Umbrella Reminder Card */}
-          <div className="bg-gray-800 p-6 rounded-lg">
-            <h2 className="text-xl font-bold mb-4">Never forget your umbrella!</h2>
-            <p className="text-gray-400 mb-6">
-              Sign up for our daily weather newsletter personalized just for you.
-            </p>
-            <button className="w-full py-3 bg-blue-600 text-white rounded-lg text-lg font-bold">
-              Sign up
-            </button>
-          </div>
+        {/* Advanced Section */}
+        <div className="bg-gray-800 p-6 rounded-lg">
+          <h2 className="text-xl font-bold mb-4">Advanced</h2>
+          <ul className="text-gray-400 mb-6">
+            <li>Ad-free</li>
+            <li>Health activities overview</li>
+            <li>Severe weather notifications</li>
+          </ul>
+          <button className="w-full py-3 bg-blue-600 text-white rounded-lg text-lg font-bold">
+            $5.99/month
+          </button>
+        </div>
+
+        {/* Umbrella Reminder Section */}
+        <div className="bg-gray-800 p-6 rounded-lg">
+          <h2 className="text-xl font-bold mb-4">Never forget your umbrella!</h2>
+          <p className="text-gray-400 mb-6">
+            Sign up for our daily weather newsletter personalized just for you.
+          </p>
+          <button className="w-full py-3 bg-blue-600 text-white rounded-lg text-lg font-bold">
+            Sign up
+          </button>
         </div>
       </div>
 
       {/* Notifications Section */}
-      <div className="mt-8 bg-gray-800 p-6 rounded-lg">
-        <h2 className="text-xl font-bold mb-6">Notifications</h2>
+      <div className="mt-6 bg-gray-800 p-6 rounded-lg">
+        <h2 className="text-xl font-bold mb-4">Notifications</h2>
         <div className="flex items-center justify-between">
           <div>
             <p className="font-semibold">Notifications</p>
@@ -117,8 +116,8 @@ const Settings = () => {
       </div>
 
       {/* General Section */}
-      <div className="mt-8 bg-gray-800 p-6 rounded-lg">
-        <h2 className="text-xl font-bold mb-6">General</h2>
+      <div className="mt-6 bg-gray-800 p-6 rounded-lg">
+        <h2 className="text-xl font-bold mb-4">General</h2>
         <div className="flex items-center justify-between">
           <div>
             <p className="font-semibold">12-Hour Time</p>
