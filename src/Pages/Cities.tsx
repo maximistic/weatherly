@@ -3,7 +3,30 @@ import Image from "next/image";
 import { fetchWeatherData } from "../utils/data";
 import { FiTrash } from "react-icons/fi";
 import { useCities } from "../context/CitiesContext";
+import { useSettings } from "../context/SettingsContext"; // Import useSettings hook
 import "../globals.css";
+
+// Convert temperature from Celsius to Fahrenheit or vice versa
+const convertTemperature = (temp: number | string, toUnit: "Celsius" | "Fahrenheit"): string => {
+  if (typeof temp === "string" || temp === undefined) return temp.toString();
+
+  if (toUnit === "Fahrenheit") {
+    return ((temp * 9) / 5 + 32).toFixed(1); // Convert to Fahrenheit
+  } else {
+    return (((temp - 32) * 5) / 9).toFixed(1); // Convert to Celsius
+  }
+};
+
+// Convert wind speed from km/h to m/s or knots
+const convertWindSpeed = (speed: number, toUnit: "km/h" | "m/s" | "Knots"): string => {
+  if (toUnit === "m/s") {
+    return (speed / 3.6).toFixed(2); // km/h to m/s
+  } else if (toUnit === "Knots") {
+    return (speed / 1.852).toFixed(2); // km/h to Knots
+  } else {
+    return speed.toFixed(2); // km/h
+  }
+};
 
 type City = {
   name: string;
@@ -16,6 +39,7 @@ type City = {
 
 const Cities = ({ searchQuery }: { searchQuery: string }) => {
   const { cities, addCity, deleteCity, deleteAllCities } = useCities();
+  const { temperatureUnit } = useSettings(); // Get the temperatureUnit from context
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -109,7 +133,9 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="text-xl font-semibold">{city.temp}</div>
+              <div className="text-xl font-semibold">
+                {convertTemperature(Number(city.temp), temperatureUnit)}°{temperatureUnit === "Celsius" ? "C" : "F"}
+              </div>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -145,7 +171,10 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
                 className="w-12 h-12"
               />
               <div>
-                <p className="text-xl font-bold">{selectedCity.temp}</p>
+                <p className="text-xl font-bold">
+                  {convertTemperature(Number(selectedCity.temp), temperatureUnit)}°
+                  {temperatureUnit === "Celsius" ? "C" : "F"}
+                </p>
                 <p className="text-gray-400 text-sm">{selectedCity.time}</p>
               </div>
             </div>
@@ -164,7 +193,10 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
                     height={30}
                     className="w-8 h-8"
                   />
-                  <p className="text-sm">{hour.temp}</p>
+                  <p className="text-sm">
+                    {convertTemperature(Number(hour.temp), temperatureUnit)}°
+                    {temperatureUnit === "Celsius" ? "C" : "F"}
+                  </p>
                 </div>
               ))}
             </div>
