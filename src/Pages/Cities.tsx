@@ -27,26 +27,29 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
       setTimeout(() => setError(null), 3000); // Hide error after 3 seconds
       return;
     }
+  
     try {
       const weatherData = await fetchWeatherData(query);
   
       const newCity: City = {
         name: weatherData.city,
-        temp: weatherData.currentTemp.toString(),  
+        temp: weatherData.currentTemp.toString(),  // Ensure temperature is a string
         icon: weatherData.hourlyForecast[0]?.icon || "",
+        time: new Date().toLocaleString(),  // Set current time as a string
+        timezone: weatherData.timezone || "UTC",  // Extract timezone or use a default value
         hourlyForecast: weatherData.hourlyForecast.slice(0, 6).map((hour) => ({
           ...hour,
-          temp: hour.temp.toString(), 
+          temp: hour.temp.toString(),  // Ensure hourly temperatures are strings
         })),
       };
   
       addCity(newCity);
-      setError(null);
+      setError(null);  // Clear any previous error
     } catch {
       setError("City not found or API error. Please try again.");
       setTimeout(() => setError(null), 3000); // Hide error after 3 seconds
     }
-  }, [cities, addCity]);
+  }, [cities, addCity]);  
 
   const convertTemperature = (temp: number | string, toUnit: "Celsius" | "Fahrenheit"): string => {
     if (typeof temp === "string" || temp === undefined) return temp.toString();
