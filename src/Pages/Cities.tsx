@@ -10,8 +10,6 @@ type City = {
   name: string;
   temp: string;
   icon: string;
-  time: string;
-  timezone: string;
   hourlyForecast: { time: string; temp: string; icon: string }[];
 };
 
@@ -35,8 +33,6 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
         name: weatherData.city,
         temp: weatherData.currentTemp.toString(),  // Ensure temperature is a string
         icon: weatherData.hourlyForecast[0]?.icon || "",
-        time: new Date().toLocaleString(),  // Set current time as a string
-        timezone: weatherData.timezone || "UTC",  // Extract timezone or use a default value
         hourlyForecast: weatherData.hourlyForecast.slice(0, 6).map((hour) => ({
           ...hour,
           temp: hour.temp.toString(),  // Ensure hourly temperatures are strings
