@@ -1,6 +1,5 @@
 # Weatherly
-
-Weatherly is a modern weather forecasting app built with Next.js and styled with Tailwind CSS. It provides detailed weather updates using OpenWeatherMap API, supports GeoLocation-based forecasts, and allows users to save favorite locations for quick access. 
+Weatherly is a Weather Forecasting tool built with Next.js and styled with Tailwind CSS. It provides detailed weather updates using OpenWeatherMap API, supports GeoLocation-based Forecasts, and allows users to save favorite locations for quick access.
 
 ## Guide
 
@@ -77,8 +76,6 @@ Weatherly is a modern weather forecasting app built with Next.js and styled with
 2. **Install Dependencies**:
    ```bash
    npm install 
-   or
-   yarn install
 3. **Set Up Environment Variables**:
     Create a .env.local file in the project root and add the following variables:
     ```bash
@@ -97,7 +94,7 @@ Tailwind CSS offers an elegant, utility-first styling, which makes it easier for
 ### SSR and CSR
 Server-Side Rendering (SSR) was used for the initial data fetching - when GeoLocation is not available or the API fails, while Client-Side Rendering (CSR) was used for dynamic updates.
 ### Error Handling
-Proactively addressed potential issues like invalid input, server errors, and offline states to ensure a smooth user experience.
+Addressed potential issues like invalid input, server errors, and offline states to ensure a smooth user experience.
 
 ## Author
 
