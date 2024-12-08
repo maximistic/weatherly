@@ -2,6 +2,31 @@
 
 Weatherly is a modern weather forecasting app built with Next.js and styled with Tailwind CSS. It provides detailed weather updates using OpenWeatherMap API, supports GeoLocation-based forecasts, and allows users to save favorite locations for quick access. 
 
+## Guide
+
+1. **Landing Page**:
+![image](https://github.com/user-attachments/assets/996326ff-8569-4a96-ba20-5da52899a013)
+![image](https://github.com/user-attachments/assets/c7a3d70f-377f-4f03-851c-a5593439281a)
+   - This is the Weather tab, which displays the current weather conditions (Fetched using the OpenWeatherMap API) for the user's current GeoLocation.
+   - If the GeoLocation API is not working, it displays a default location (Coimbatore).
+   - It also includes a search bar for users to search for a location by city name or ZIP code.
+   - It displays the current day's weather conditions, followed by Air Condition (which when clicked, opens up an explainer), followed by the forecast for the next 5 days.
+   - This page includes a map of the searched location/ Current Location being displayed.
+
+2. **Cities Tab**:
+![image](https://github.com/user-attachments/assets/703a343c-c5df-47ef-aca2-568b6403fa96)
+![image](https://github.com/user-attachments/assets/a3ac2691-be90-40be-b006-2377979c050d)
+   - This tab allows users to save up to 5favorite locations for quick access.
+   - It includes a search bar for users to search for a location by city name or ZIP code.
+   - when clicked on a specific item, the section expands to show the details of the selected item. 
+   - It includes graceful error handling for invalid input, rate limits, and server errors.
+
+3. **Settings Tab**:
+![image](https://github.com/user-attachments/assets/13e3bbe0-14a8-48dc-b55d-8ff83fc5c9b0)
+   - This tab allows users to configure their settings, such as changing the unit of measurement (Celcius/ Fahrenheit). 
+   - It also includes notifications and general settings button. 
+
+
 ## Features
 
 ### Search Weather by Location
@@ -31,13 +56,13 @@ Weatherly is a modern weather forecasting app built with Next.js and styled with
 ### Multi-location Dashboard
 - Users can save up to five favorite locations under the 'Cities' tab and switch between their weather forecasts.
 
-### Technology Stack
+## Technology Stack
 - **Next.js** for front-end development.
 - **TypeScript** for type safety.
 - **Tailwind CSS** for styling.
 - **OpenWeatherMap API** for weather data.
 
-### Deployment
+## Deployment
 - Hosted on Vercel for easy deployment.
 
 ---
