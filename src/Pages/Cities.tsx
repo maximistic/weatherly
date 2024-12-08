@@ -6,12 +6,15 @@ import { useCities } from "../context/CitiesContext";
 import { useSettings } from "../context/SettingsContext";
 import "../globals.css";
 
-type City = {
+export type City = {
   name: string;
   temp: string;
   icon: string;
   hourlyForecast: { time: string; temp: string; icon: string }[];
+  time: string;   // New property
+  timezone: string; // New property
 };
+
 
 const Cities = ({ searchQuery }: { searchQuery: string }) => {
   const { cities, addCity, deleteCity, deleteAllCities } = useCities();
@@ -37,6 +40,8 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
           ...hour,
           temp: hour.temp.toString(),  // Ensure hourly temperatures are strings
         })),
+        time: new Date().toLocaleString(),  // Set current time as a string
+        timezone: weatherData.timezone || "UTC",  // Extract timezone or use "UTC"
       };
   
       addCity(newCity);
@@ -45,7 +50,9 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
       setError("City not found or API error. Please try again.");
       setTimeout(() => setError(null), 3000); // Hide error after 3 seconds
     }
-  }, [cities, addCity]);  
+  }, [cities, addCity]);
+  
+   
 
   const convertTemperature = (temp: number | string, toUnit: "Celsius" | "Fahrenheit"): string => {
     if (typeof temp === "string" || temp === undefined) return temp.toString();

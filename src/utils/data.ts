@@ -122,6 +122,7 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
       sunset,
       hourlyForecast,
       weeklyForecast,
+      timezone: "",
     };
   } catch (error) {
     console.error("Error fetching weather data:", error);
