@@ -1,7 +1,8 @@
 import axios from "axios";
 
-const API_KEY = "b2628eab986a5c305f4fa92cb7ccbc0c";
+const API_KEY = "b2628eab986a5c305f4fa92cb7ccbc0c"; 
 const BASE_URL = "https://api.openweathermap.org/data/2.5/";
+const IP_API_URL = "http://ip-api.com/json/";
 
 export interface HourlyForecast {
   time: string;
@@ -51,51 +52,22 @@ interface CurrentWeatherData {
     [key: string]: number;
   };
   sys: {
-    sunrise: number; 
-    sunset: number;  
+    sunrise: number;
+    sunset: number;
   };
 }
 
+// Fetch geolocation using IP-API
 export const fetchGeolocation = async (): Promise<{ city: string; lat: number; lon: number }> => {
-  return new Promise((resolve) => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          resolve({
-            city: "Current Location", // Placeholder for browser-provided location
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.warn("Geolocation failed:", error);
+  try {
+    const response = await axios.get(IP_API_URL);
+    const { city, lat, lon } = response.data;
+    return { city, lat, lon };
+  } catch (error) {
+    console.error("Error fetching geolocation from IP-API:", error);
 
-          let errorMessage;
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              errorMessage = "Permission denied for accessing geolocation.";
-              break;
-            case error.POSITION_UNAVAILABLE:
-              errorMessage = "Position unavailable. Please ensure your device has a working GPS or try again later.";
-              break;
-            case error.TIMEOUT:
-              errorMessage = "Geolocation request timed out. Please try again.";
-              break;
-            default:
-              errorMessage = "An unknown error occurred.";
-          }
-          console.warn(errorMessage);
-
-          // Fallback to default location (Coimbatore) if geolocation fails
-          resolve({ city: "Coimbatore", lat: 11.0168, lon: 76.9858 });
-        }
-      );
-    } else {
-      console.error("Geolocation not supported by browser");
-      // Fallback to default location
-      resolve({ city: "Coimbatore", lat: 11.0168, lon: 76.9858 });
-    }
-  });
+    return { city: "Coimbatore", lat: 11.0168, lon: 76.9858 };
+  }
 };
 
 export const fetchWeatherData = async (city?: string, lat?: number, lon?: number) => {
@@ -120,7 +92,6 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
     const currentWeather = currentWeatherResponse.data as CurrentWeatherData;
     const forecastData = forecastResponse.data as ForecastData;
 
-    // Convert sunrise and sunset from UNIX timestamps to readable time
     const sunrise = new Date(currentWeather.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const sunset = new Date(currentWeather.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -143,8 +114,8 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
     return {
       city: currentWeather.name,
       currentTemp: `${Math.round(currentWeather.main.temp)}°`,
-      temp_max: `${Math.round(currentWeather.main.temp_max)}°`, 
-      temp_min: `${Math.round(currentWeather.main.temp_min)}°`, 
+      temp_max: `${Math.round(currentWeather.main.temp_max)}°`,
+      temp_min: `${Math.round(currentWeather.main.temp_min)}°`,
       realFeel: `${Math.round(currentWeather.main.feels_like)}°`,
       wind: `${currentWeather.wind.speed} km/h`,
       sunrise,
