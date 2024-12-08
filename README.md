@@ -25,6 +25,13 @@ Weatherly is a Weather Forecasting tool built with Next.js and styled with Tailw
    - This tab allows users to configure their settings, such as changing the unit of measurement (Celcius/ Fahrenheit). 
    - It also includes notifications and general settings button. 
 
+4. **Fallback UI**:
+![image](https://github.com/user-attachments/assets/f35bfa58-9e9c-440b-b1ae-b395cda061cb)
+   - This is the fallback UI, which is displayed when the user is offline or there is a server error.
+
+5. **Pro Tip**:
+![image](https://github.com/user-attachments/assets/d4da2bec-7a4d-4918-aa99-c64b192c7974)
+   - Click OK and continue, this has no impact on the application.
 
 ## Features
 
