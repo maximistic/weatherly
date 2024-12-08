@@ -3,10 +3,8 @@ import axios from "axios";
 const API_KEY = "af05fb7faf92f827af6f0f25123dc259"; 
 const BASE_URL = "https://api.openweathermap.org/data/2.5/";
 // const IP_API_URL = "https://ip-api.com/json/";
-const IP_API_URL = "https://api.ipgeolocation.io/ipgeo?apiKey=fcd8776a8d3f46b8a413e0682a186831";
+ const IP_API_URL = "https://api.ipgeolocation.io/ipgeo?apiKey=fcd8776a8d3f46b8a413e0682a186831";
 // const IP_API_KEY = "fcd8776a8d3f46b8a413e0682a186831";
-
-
 
 export interface HourlyForecast {
   time: string;
@@ -70,7 +68,7 @@ export const fetchGeolocation = async (): Promise<{ city: string; lat: number; l
     return { city, lat, lon };
   } catch (error) {
     console.error("Error fetching geolocation:", error);
-    return { city: "Coimbatore", lat: 11.0168, lon: 76.9858 }; // Default fallback
+    return { city: "Coimbatore", lat: 11.0168, lon: 76.9858 };
   }
 };
 
@@ -138,7 +136,7 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
       wind: `${currentWeather.wind.speed} km/h`,
       sunrise,
       sunset,
-      timezone, // Included timezone in the return object
+      timezone, 
       hourlyForecast,
       weeklyForecast,
     };
