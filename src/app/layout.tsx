@@ -6,6 +6,9 @@ import { FaCity } from "react-icons/fa";
 import Weather from "../Pages/Weather";
 import Cities from "../Pages/Cities";
 import Settings from "../Pages/Settings";
+import Pricing from "../Pages/Pricing";
+import SignUp from "@/Pages/SignUp";
+
 import "../globals.css";
 import { SettingsProvider } from "../context/SettingsContext";
 import { CitiesProvider } from "../context/CitiesContext"; 
@@ -60,6 +63,10 @@ export default function RootLayout() {
         return <Cities searchQuery={searchQuery} />;
       case "Settings":
         return <Settings />;
+      case "pricing":
+        return <Pricing />;
+      case "signUp":
+        return <SignUp />;
       default:
         return <Weather searchQuery={searchQuery} />;
     }
