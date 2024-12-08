@@ -1,35 +1,22 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
-import { fetchWeatherData, HourlyForecast } from "../utils/data";
+import { fetchWeatherData } from "../utils/data";
 import { FiTrash } from "react-icons/fi";
 import { useCities } from "../context/CitiesContext";
 
-export type City = {
+type City = {
   name: string;
   temp: string;
-  currentTemp: string;
   icon: string;
   time: string;
-  timezone: number;
-  temp_max: string;
-  temp_min: string;
-  realFeel: string;
-  wind: string;
-  sunrise: string;
-  sunset: string;
-  hourlyForecast: HourlyForecast[];
+  timezone: string;
+  hourlyForecast: { time: string; temp: string; icon: string }[];
 };
 
 const Cities = ({ searchQuery }: { searchQuery: string }) => {
   const { cities, addCity, deleteCity } = useCities();
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (searchQuery) {
-      handleAddCity(searchQuery);
-    }
-  }, [searchQuery]);
 
   const handleAddCity = useCallback(async (query: string) => {
     if (cities.length >= 5) {
@@ -38,17 +25,21 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
     }
     try {
       const weatherData = await fetchWeatherData(query);
+      const cityTimezone = weatherData.timezone || "UTC";
+      const cityDate = new Date().toLocaleString("en-US", {
+        timeZone: cityTimezone,
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+
       const newCity: City = {
         name: weatherData.city,
-        currentTemp: weatherData.currentTemp,
+        temp: weatherData.currentTemp,
         icon: weatherData.hourlyForecast[0]?.icon || "",
-        hourlyForecast: weatherData.hourlyForecast,
-        temp_max: weatherData.temp_max,
-        temp_min: weatherData.temp_min,
-        realFeel: weatherData.realFeel,
-        wind: weatherData.wind,
-        sunrise: weatherData.sunrise,
-        sunset: weatherData.sunset
+        time: cityDate,
+        timezone: cityTimezone,
+        hourlyForecast: weatherData.hourlyForecast.slice(0, 6),
       };
 
       if (cities.some((city) => city.name === newCity.name)) {
@@ -62,6 +53,12 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
       setError("City not found or API error. Please try again.");
     }
   }, [cities, addCity]);
+
+  useEffect(() => {
+    if (searchQuery) {
+      handleAddCity(searchQuery);
+    }
+  }, [searchQuery, handleAddCity]);
 
   const handleDeleteCity = (cityName: string) => {
     deleteCity(cityName);
@@ -93,11 +90,11 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
               />
               <div>
                 <h3 className="text-lg font-bold">{city.name}</h3>
-                <p className="text-sm text-gray-400">{city.currentTemp}</p>
+                <p className="text-sm text-gray-400">{city.time}</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="text-xl font-semibold">{city.currentTemp}</div>
+              <div className="text-xl font-semibold">{city.temp}</div>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -119,35 +116,19 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
       {selectedCity && (
         <div className="flex-1 sm:max-w-sm p-4 rounded-lg bg-gray-900 border border-gray-700 space-y-4">
           <h2 className="text-lg font-bold">{selectedCity.name} Details</h2>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Image
-                src={selectedCity.icon}
-                alt={`${selectedCity.name} weather`}
-                width={50}
-                height={50}
-                className="w-12 h-12"
-              />
-              <div>
-                <p className="text-xl font-bold">{selectedCity.currentTemp}</p>
-                <div className="text-sm text-gray-400">
-                  <span>H: {selectedCity.temp_max}</span>
-                  <span className="mx-2">|</span>
-                  <span>L: {selectedCity.temp_min}</span>
-                </div>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-400">Real Feel: {selectedCity.realFeel}</p>
-              <p className="text-sm text-gray-400">Wind: {selectedCity.wind}</p>
+          <div className="flex items-center gap-4">
+            <Image
+              src={selectedCity.icon}
+              alt={`${selectedCity.name} weather`}
+              width={50}
+              height={50}
+              className="w-12 h-12"
+            />
+            <div>
+              <p className="text-xl font-bold">{selectedCity.temp}</p>
+              <p className="text-gray-400 text-sm">{selectedCity.time}</p>
             </div>
           </div>
-
-          <div className="flex justify-between text-sm text-gray-400">
-            <p>Sunrise: {selectedCity.sunrise}</p>
-            <p>Sunset: {selectedCity.sunset}</p>
-          </div>
-
           <h3 className="text-md font-bold">Hourly Forecast</h3>
           <div className="grid grid-cols-3 sm:grid-cols-2 gap-4">
             {selectedCity.hourlyForecast.map((hour, index) => (
