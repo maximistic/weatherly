@@ -127,6 +127,7 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
       sunset,
       hourlyForecast,
       weeklyForecast,
+      timezone: "",
       lat: currentWeather.coord.lat,
       lon: currentWeather.coord.lon,
     };
