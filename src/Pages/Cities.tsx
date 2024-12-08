@@ -16,13 +16,7 @@ type City = {
 const Cities = ({ searchQuery }: { searchQuery: string }) => {
   const { cities, addCity, deleteCity } = useCities();
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
-  const [ error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (searchQuery) {
-      handleAddCity(searchQuery);
-    }
-  }, [searchQuery]);
+  const [error, setError] = useState<string | null>(null);
 
   const handleAddCity = useCallback(async (query: string) => {
     if (cities.length >= 5) {
@@ -31,14 +25,14 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
     }
     try {
       const weatherData = await fetchWeatherData(query);
-      const cityTimezone = weatherData.timezone;
+      const cityTimezone = weatherData.timezone || "UTC";
       const cityDate = new Date().toLocaleString("en-US", {
         timeZone: cityTimezone,
         hour: "2-digit",
         minute: "2-digit",
         hour12: true,
       });
-  
+
       const newCity: City = {
         name: weatherData.city,
         temp: weatherData.currentTemp,
@@ -47,19 +41,24 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
         timezone: cityTimezone,
         hourlyForecast: weatherData.hourlyForecast.slice(0, 6),
       };
-  
+
       if (cities.some((city) => city.name === newCity.name)) {
         setError("City already added.");
         return;
       }
-  
+
       addCity(newCity);
       setError(null);
     } catch {
       setError("City not found or API error. Please try again.");
     }
   }, [cities, addCity]);
-  
+
+  useEffect(() => {
+    if (searchQuery) {
+      handleAddCity(searchQuery);
+    }
+  }, [searchQuery, handleAddCity]);
 
   const handleDeleteCity = (cityName: string) => {
     deleteCity(cityName);
@@ -154,6 +153,5 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
     </div>
   );
 };
-
 
 export default Cities;
