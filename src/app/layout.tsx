@@ -9,6 +9,7 @@ import Settings from "../Pages/Settings";
 import "../globals.css";
 import { SettingsProvider } from "../context/SettingsContext";
 import { CitiesProvider } from "../context/CitiesContext"; 
+import FallbackUI from "@/Pages/FallbackUI";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -69,6 +70,7 @@ export default function RootLayout() {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900 text-white`}
       >
+        <FallbackUI>
         <CitiesProvider>
           <SettingsProvider>
             <div className="flex h-screen p-4 sm:p-8 rounded-md">
@@ -143,6 +145,7 @@ export default function RootLayout() {
             </div>
           </SettingsProvider>
         </CitiesProvider>
+        </FallbackUI>
       </body>
     </html>
   );
