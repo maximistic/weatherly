@@ -1,8 +1,12 @@
 import axios from "axios";
 
-const API_KEY = "b2628eab986a5c305f4fa92cb7ccbc0c"; 
+const API_KEY = "af05fb7faf92f827af6f0f25123dc259"; 
 const BASE_URL = "https://api.openweathermap.org/data/2.5/";
-const IP_API_URL = "http://ip-api.com/json/";
+// const IP_API_URL = "https://ip-api.com/json/";
+const IP_API_URL = "https://api.ipgeolocation.io/ipgeo?apiKey=fcd8776a8d3f46b8a413e0682a186831";
+// const IP_API_KEY = "fcd8776a8d3f46b8a413e0682a186831";
+
+
 
 export interface HourlyForecast {
   time: string;
@@ -62,14 +66,14 @@ interface CurrentWeatherData {
 export const fetchGeolocation = async (): Promise<{ city: string; lat: number; lon: number }> => {
   try {
     const response = await axios.get(IP_API_URL);
-    const { city, lat, lon } = response.data;
+    const { city, latitude: lat, longitude: lon } = response.data;
     return { city, lat, lon };
   } catch (error) {
-    console.error("Error fetching geolocation from IP-API:", error);
-
-    return { city: "Coimbatore", lat: 11.0168, lon: 76.9858 };
+    console.error("Error fetching geolocation:", error);
+    return { city: "Coimbatore", lat: 11.0168, lon: 76.9858 }; // Default fallback
   }
 };
+
 
 export const fetchWeatherData = async (city?: string, lat?: number, lon?: number) => {
   let currentWeatherUrl, forecastUrl;
