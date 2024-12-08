@@ -62,9 +62,7 @@ export default function RootLayout() {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-900 text-white`}
       >
-        {/* Wrap with CitiesProvider */}
         <CitiesProvider>
-          {/* Wrap with SettingsProvider */}
           <SettingsProvider>
             <div className="flex h-screen p-4 sm:p-8 rounded-md">
               {/* Sidebar */}
@@ -101,7 +99,7 @@ export default function RootLayout() {
               {/* Main Content */}
               <div className="flex-1 flex flex-col w-full">
                 <div
-                  className={`p-4 flex items-center space-x-4 rounded-lg mb-8 bg-gray-800 relative`}
+                  className={`p-4 flex items-center space-x-4 rounded-lg  bg-gray-800 relative`}
                 >
                   <div className="sm:hidden absolute top-1/2 left-7 -translate-y-1/2 z-10">
                     <button

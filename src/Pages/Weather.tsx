@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
@@ -31,6 +30,7 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeCondition, setActiveCondition] = useState<string | null>(null);
 
   const fetchData = async (query?: string) => {
     setLoading(true);
@@ -68,8 +68,12 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
       </div>
     );
 
+  const closeConditionSection = () => {
+    setActiveCondition(null);
+  };
+
   return (
-    <div className="p-6 bg-gray-900 text-white font-[family-name:var(--font-geist-sans)]">
+    <div className="p-4 bg-gray-900 text-white font-[family-name:var(--font-geist-sans)]">
       {/* Weather Data Display */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <div className="sm:col-span-2 lg:col-span-2">
@@ -119,37 +123,101 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
             </div>
           </div>
 
-          {/* Air Conditions */}
-          <div className="mb-8 lg:mb-0">
-            <h3 className="text-lg font-semibold mb-4">Air Conditions</h3>
-            <div className="grid grid-cols-2 gap-4 bg-gray-800 p-4 rounded-lg h-full">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-400">Real Feel</p>
-                  <h4 className="font-bold text-lg">{weatherData?.realFeel}</h4>
+          {/* Flex container to align "Air Conditions" and "Real Feel Explanation" side by side */}
+          <div className="flex gap-8">
+            {/* Air Conditions */}
+            <div className="mb-8 lg:mb-0 flex-1">
+              <h3 className="text-lg font-semibold mb-4">Air Conditions</h3>
+              <div className="grid grid-cols-2 gap-4 bg-gray-800 p-4 rounded-lg h-full">
+                <div
+                  className="flex items-center justify-between cursor-pointer hover:bg-gray-700 p-2 rounded-md transition-all"
+                  onClick={() => setActiveCondition("realFeel")}
+                >
+                  <div>
+                    <p className="text-sm text-gray-400">Real Feel</p>
+                    <h4 className="font-bold text-lg">{weatherData?.realFeel}</h4>
+                  </div>
+                  <WiThermometer className="text-4xl text-blue-400" />
                 </div>
-                <WiThermometer className="text-4xl text-blue-400" />
+                <div
+                  className="flex items-center justify-between cursor-pointer hover:bg-gray-700 p-2 rounded-md transition-all"
+                  onClick={() => setActiveCondition("wind")}
+                >
+                  <div>
+                    <p className="text-sm text-gray-400">Wind</p>
+                    <h4 className="font-bold text-lg">{weatherData?.wind}</h4>
+                  </div>
+                  <WiStrongWind className="text-4xl text-blue-400" />
+                </div>
+                <div
+                  className="flex items-center justify-between cursor-pointer hover:bg-gray-700 p-2 rounded-md transition-all"
+                  onClick={() => setActiveCondition("sunrise")}
+                >
+                  <div>
+                    <p className="text-sm text-gray-400">Sunrise</p>
+                    <h4 className="font-bold text-lg">{weatherData?.sunrise}</h4>
+                  </div>
+                  <WiSunrise className="text-4xl text-yellow-400" />
+                </div>
+                <div
+                  className="flex items-center justify-between cursor-pointer hover:bg-gray-700 p-2 rounded-md transition-all"
+                  onClick={() => setActiveCondition("sunset")}
+                >
+                  <div>
+                    <p className="text-sm text-gray-400">Sunset</p>
+                    <h4 className="font-bold text-lg">{weatherData?.sunset}</h4>
+                  </div>
+                  <WiSunset className="text-4xl text-orange-400" />
+                </div>
               </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-400">Wind</p>
-                  <h4 className="font-bold text-lg">{weatherData?.wind}</h4>
-                </div>
-                <WiStrongWind className="text-4xl text-blue-400" />
+            </div>
+
+            {/* Real Feel Explanation */}
+            <div
+              className={`mt-4 bg-gray-800 p-3 rounded-lg shadow-lg sm:mt-0 lg:mt-0 flex-1 ${activeCondition ? "block" : "hidden"}`}
+            >
+              <div className="flex justify-between items-center">
+                <h4 className="text-xl font-semibold text-white">
+                  {activeCondition === "realFeel" && "Real Feel Explained"}
+                  {activeCondition === "wind" && "Wind Speed Explained"}
+                  {activeCondition === "sunrise" && "Sunrise Time Explained"}
+                  {activeCondition === "sunset" && "Sunset Time Explained"}
+                </h4>
+                <button
+                  onClick={closeConditionSection}
+                  className="text-white text-xl border border-gray-400 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-700 transition-all"
+                >
+                  &times;
+                </button>
               </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-400">Sunrise</p>
-                  <h4 className="font-bold text-lg">{weatherData?.sunrise}</h4>
-                </div>
-                <WiSunrise className="text-4xl text-yellow-400" />
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-400">Sunset</p>
-                  <h4 className="font-bold text-lg">{weatherData?.sunset}</h4>
-                </div>
-                <WiSunset className="text-4xl text-orange-400" />
+              <div className="mt-4 text-sm text-gray-400">
+                {activeCondition === "realFeel" && (
+                  <p>
+                    Real feel is how the temperature feels when considering factors
+                    like humidity, wind, and solar radiation. It can often feel
+                    hotter or colder than the actual temperature.
+                  </p>
+                )}
+                {activeCondition === "wind" && (
+                  <p>
+                    Wind speed refers to how fast the air is moving. It can affect
+                    temperature and weather conditions, like storms.
+                  </p>
+                )}
+                {activeCondition === "sunrise" && (
+                  <p>
+                    Sunrise is the time when the upper edge of the sun&apos;s disk
+                    first appears above the horizon. It marks the beginning of
+                    the day.
+                  </p>
+                )}
+                {activeCondition === "sunset" && (
+                  <p>
+                    Sunset is when the upper edge of the sun&apos;s disk disappears
+                    below the horizon. It marks the end of the day and the start
+                    of night.
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -158,7 +226,7 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
         {/* Weekly Forecast */}
         <div className="lg:col-span-1 sm:col-span-2">
           <h3 className="text-lg font-semibold mb-4">5-Day Forecast</h3>
-          <div className="bg-gray-800 p-4 rounded-lg ">
+          <div className="bg-gray-800 p-4 rounded-lg">
             {weatherData?.weeklyForecast.map((day, index) => (
               <div
                 key={index}
@@ -174,11 +242,9 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
                 <p className="text-gray-400">{day.condition}</p>
                 <p className="font-bold">{day.temp}</p>
               </div>
-              
-
             ))}
           </div>
-          </div>
+        </div>
       </div>
     </div>
   );
