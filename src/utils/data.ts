@@ -92,11 +92,24 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
     const currentWeather = currentWeatherResponse.data as CurrentWeatherData;
     const forecastData = forecastResponse.data as ForecastData;
 
-    const sunrise = new Date(currentWeather.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const sunset = new Date(currentWeather.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    // Extract timezone from currentWeather response
+    const timezoneOffsetInSeconds = currentWeather.timezone;
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone; // Fallback to local timezone
+
+    const sunrise = new Date((currentWeather.sys.sunrise + timezoneOffsetInSeconds) * 1000).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const sunset = new Date((currentWeather.sys.sunset + timezoneOffsetInSeconds) * 1000).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
 
     const hourlyForecast: HourlyForecast[] = forecastData.list.slice(0, 6).map((item: WeatherData) => ({
-      time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      time: new Date((item.dt + timezoneOffsetInSeconds) * 1000).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
       temp: `${Math.round(item.main.temp)}°`,
       icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
     }));
@@ -105,7 +118,7 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
       .filter((_item: WeatherData, index: number) => index % 8 === 0)
       .slice(0, 7)
       .map((item: WeatherData) => ({
-        day: new Date(item.dt * 1000).toLocaleDateString([], { weekday: 'short' }),
+        day: new Date((item.dt + timezoneOffsetInSeconds) * 1000).toLocaleDateString([], { weekday: "short" }),
         condition: item.weather[0].main,
         temp: `${Math.round(item.main.temp_max)}/${Math.round(item.main.temp_min)}`,
         icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
@@ -120,6 +133,7 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
       wind: `${currentWeather.wind.speed} km/h`,
       sunrise,
       sunset,
+      timezone, // Add timezone to the returned data
       hourlyForecast,
       weeklyForecast,
     };
@@ -128,3 +142,4 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
     throw error;
   }
 };
+
