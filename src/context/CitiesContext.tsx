@@ -13,6 +13,7 @@ type CitiesContextType = {
   cities: City[];
   addCity: (city: City) => void;
   deleteCity: (name: string) => void;
+  deleteAllCities: () => void; // Add this method
 };
 
 const CitiesContext = createContext<CitiesContextType | undefined>(undefined);
@@ -65,8 +66,18 @@ export const CitiesProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
+  const deleteAllCities = () => {
+    setCities([]); // Clear the cities array
+
+    // Notify other tabs
+    new BroadcastChannel("cities-sync").postMessage({
+      type: "SYNC_CITIES",
+      payload: [],
+    });
+  };
+
   return (
-    <CitiesContext.Provider value={{ cities, addCity, deleteCity }}>
+    <CitiesContext.Provider value={{ cities, addCity, deleteCity, deleteAllCities }}>
       {children}
     </CitiesContext.Provider>
   );

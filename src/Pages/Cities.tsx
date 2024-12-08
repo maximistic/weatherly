@@ -15,7 +15,7 @@ type City = {
 };
 
 const Cities = ({ searchQuery }: { searchQuery: string }) => {
-  const { cities, addCity, deleteCity } = useCities();
+  const { cities, addCity, deleteCity, deleteAllCities } = useCities();
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -63,10 +63,23 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
     if (selectedCity?.name === cityName) setSelectedCity(null);
   };
 
+  const handleDeleteAllCities = () => {
+    deleteAllCities(); // Deletes all cities from the list
+    setSelectedCity(null); // Clears selected city if all cities are deleted
+  };
+
   return (
     <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 p-4 sm:p-8">
       <div className="flex-1 space-y-4">
-        <h2 className="text-xl font-bold">Your Cities</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-bold">Your Cities</h2>
+          <button
+            onClick={handleDeleteAllCities}
+            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-all"
+          >
+            Delete All
+          </button>
+        </div>
         {error && (
           <p className="text-red-500 text-sm absolute top-0 right-0 mt-4 mr-4 p-2 bg-gray-800 rounded-md">
             {error}
