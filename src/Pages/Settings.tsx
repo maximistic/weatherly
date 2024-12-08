@@ -70,7 +70,7 @@ const Settings = () => {
             <li>Severe weather notifications</li>
           </ul>
           <button className="w-full py-3 bg-blue-600 text-white rounded-lg text-lg font-bold">
-            $5.99/month
+            Explore
           </button>
         </div>
 
