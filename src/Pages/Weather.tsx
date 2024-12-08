@@ -94,44 +94,50 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
 
   return (
     <div className="p-4 bg-gray-900 text-white font-[family-name:var(--font-geist-sans)]">
+
       {/* Weather Data Display */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <div className="sm:col-span-2 lg:col-span-2">
-          <div className="flex justify-between items-center mb-8">
-            <div>
-              <h1 className="text-3xl font-bold">{weatherData?.city}</h1>
-              <div className="flex items-center space-x-4 mt-2">
-                <div className="flex items-center">
-                  <WiThermometer size={24} className="mr-2 text-red-400" />
-                  <span>
-                    {convertTemperature(
-                      weatherData?.temp_max ? Number(weatherData.temp_max) : undefined
-                    )}
-                  </span>
-                </div>
-                <div className="flex items-center">
-                  <WiThermometer size={24} className="mr-2 text-blue-400" />
-                  <span>
-                    {convertTemperature(
-                      weatherData?.temp_min ? Number(weatherData.temp_min) : undefined
-                    )}
-                  </span>
-                </div>
-              </div>
-              <h2 className="text-6xl font-bold mt-4">
-                {convertTemperature(
-                  weatherData?.currentTemp ? Number(weatherData.currentTemp) : undefined
-                )}
-                °{temperatureUnit === "Fahrenheit" ? "F" : "C"}
-              </h2>
-            </div>
-            <Image
-              src={weatherData?.hourlyForecast[0]?.icon || ""}
-              alt="Current Weather"
-              width={128}
-              height={128}
-            />
-          </div>
+
+        <div className="flex justify-between items-center mb-8">
+  <div className="flex items-center">
+    <div>
+      <h1 className="text-3xl font-bold">{weatherData?.city}</h1>
+      <div className="flex items-center space-x-4 mt-2">
+        <div className="flex items-center">
+          <WiThermometer size={24} className="mr-2 text-red-400" />
+          <span>
+            {convertTemperature(
+              weatherData?.temp_max ? Number(weatherData.temp_max) : undefined
+            )}
+          </span>
+        </div>
+        <div className="flex items-center">
+          <WiThermometer size={24} className="mr-2 text-blue-400" />
+          <span>
+            {convertTemperature(
+              weatherData?.temp_min ? Number(weatherData.temp_min) : undefined
+            )}
+          </span>
+        </div>
+      </div>
+      <h2 className="text-6xl font-bold mt-4">
+        {convertTemperature(
+          weatherData?.currentTemp ? Number(weatherData.currentTemp) : undefined
+        )}
+        °{temperatureUnit === "Fahrenheit" ? "F" : "C"}
+      </h2>
+    </div>
+    <Image
+      src={weatherData?.hourlyForecast[0]?.icon || ""}
+      className="ml-8"
+      alt="Current Weather"
+      width={128}
+      height={128}
+    />
+  </div>
+</div>
+
 
           {/* Today's Forecast */}
           <div className="mb-8">
@@ -213,19 +219,9 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
               </div>
             </div>
 
-            {/* Map Component */}
-            <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-4">Location Map</h3>
-              {weatherData?.city && weatherData?.lat && weatherData?.lon ? (
-                <MapComponent lat={weatherData.lat} lon={weatherData.lon} />
-              ) : (
-                <p>Map unavailable for this location.</p>
-              )}
-            </div>
-
-            {/* Real Feel Explanation */}
+            {/* Explanation */}
             <div
-              className={`mt-4 bg-gray-800 p-3 rounded-lg shadow-lg sm:mt-0 lg:mt-0 flex-1 ${activeCondition ? "block" : "hidden"}`}
+              className={` pt-5 bg-gray-800 p-3 rounded-lg shadow-lg sm:mt-0 lg:mt-0 flex-1 ${activeCondition ? "block" : "hidden"}`}
             >
               <div className="flex justify-between items-center">
                 <h4 className="text-xl font-semibold text-white">
@@ -274,8 +270,18 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
           </div>
         </div>
 
+        {/* Map Component */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold mb-4">Location Map</h3>
+          {weatherData?.city && weatherData?.lat && weatherData?.lon ? (
+            <MapComponent lat={weatherData.lat} lon={weatherData.lon} />
+          ) : (
+            <p>Map unavailable for this location.</p>
+          )}
+        </div>
+
         {/* Weekly Forecast */}
-        <div className="lg:col-span-1 sm:col-span-2">
+        <div className="lg:col-span-1 sm:col-span-2 mt-10">
           <h3 className="text-lg font-semibold mb-4">5-Day Forecast</h3>
           <div className="bg-gray-800 p-4 rounded-lg">
           {weatherData?.weeklyForecast.map((day, index) => {

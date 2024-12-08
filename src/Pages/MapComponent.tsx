@@ -1,5 +1,5 @@
 import React from "react";
-import { GoogleMap, LoadScript } from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
 interface MapProps {
   lat: number;
@@ -9,7 +9,7 @@ interface MapProps {
 const MapComponent: React.FC<MapProps> = ({ lat, lon }) => {
   const containerStyle = {
     width: "100%",
-    height: "400px",
+    height: "300px",
   };
 
   const center = {
@@ -18,9 +18,15 @@ const MapComponent: React.FC<MapProps> = ({ lat, lon }) => {
   };
 
   return (
-    <LoadScript googleMapsApiKey={process.env.MAPS_API || ""}>
+    <LoadScript
+      googleMapsApiKey={process.env.REACT_APP_MAPS_API || ""}
+      onError={(error) => {
+        console.error("Google Maps API Error:", error);
+        return <div>Error loading Google Maps. Please try again later.</div>;
+      }}
+    >
       <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
-        {/* Optional: Add markers or other overlays here */}
+        <Marker position={center} />
       </GoogleMap>
     </LoadScript>
   );
