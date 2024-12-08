@@ -13,7 +13,7 @@ import {
   HourlyForecast,
   WeeklyForecast,
 } from "../utils/data";
-
+import "../globals.css";
 
 const Weather = ({ searchQuery }: { searchQuery: string }) => {
   const [weatherData, setWeatherData] = useState<{

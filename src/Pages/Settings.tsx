@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useSettings } from "../context/SettingsContext";
+import "../globals.css";
 
 const Settings = () => {
   const {
