@@ -14,6 +14,7 @@ import {
 } from "../utils/data";
 import "../globals.css";
 import { useSettings } from "../context/SettingsContext";
+import MapComponent from "./MapComponent";
 
 const Weather = ({ searchQuery }: { searchQuery: string }) => {
   const { temperatureUnit, windSpeedUnit } = useSettings();
@@ -28,6 +29,8 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
     sunset: string;
     hourlyForecast: HourlyForecast[];
     weeklyForecast: WeeklyForecast[];
+    lat: number;
+    lon: number;
   } | null>(null);
 
   const convertTemperature = (temp: number | undefined) =>
@@ -157,7 +160,6 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
             </div>
           </div>
 
-          {/* Flex container to align "Air Conditions" and "Real Feel Explanation" side by side */}
           <div className="flex gap-8">
             {/* Air Conditions */}
             <div className="mb-8 lg:mb-0 flex-1">
@@ -209,6 +211,16 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
                   <WiSunset className="text-4xl text-orange-400" />
                 </div>
               </div>
+            </div>
+
+            {/* Map Component */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold mb-4">Location Map</h3>
+              {weatherData?.city && weatherData?.lat && weatherData?.lon ? (
+                <MapComponent lat={weatherData.lat} lon={weatherData.lon} />
+              ) : (
+                <p>Map unavailable for this location.</p>
+              )}
             </div>
 
             {/* Real Feel Explanation */}
@@ -280,15 +292,14 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
               >
                 <p className="font-bold">{day.day}</p>
                 <Image
-                  src={day.icon || "/fallback-icon.png"} // Provide a fallback image
-                  alt={day.condition || "No condition available"}
+                  src={day.icon} 
+                  alt={day.condition}
                   width={32}
                   height={32}
                 />
-                <p className="text-gray-400">{day.condition || "No Condition"}</p>
+                <p className="text-gray-400">{day.condition}</p>
                 <p className="font-bold">
-                  {/* Display the converted temperature */}
-                  {convertedTemp || day.temp} {/* Display the converted temp if available, else show the raw temp */}
+                  {convertedTemp || day.temp} 
                 </p>
               </div>
             );

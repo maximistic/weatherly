@@ -31,6 +31,7 @@ interface WeatherData {
   rain?: {
     [key: string]: number;
   };
+  
 }
 
 interface ForecastData {
@@ -54,6 +55,10 @@ interface CurrentWeatherData {
   sys: {
     sunrise: number;
     sunset: number;
+  };
+  coord: {
+    lon: number;
+    lat: number;
   };
 }
 
@@ -122,7 +127,8 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
       sunset,
       hourlyForecast,
       weeklyForecast,
-      timezone: "",
+      lat: currentWeather.coord.lat,
+      lon: currentWeather.coord.lon,
     };
   } catch (error) {
     console.error("Error fetching weather data:", error);
