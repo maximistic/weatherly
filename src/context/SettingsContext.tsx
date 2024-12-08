@@ -1,24 +1,29 @@
 import React, { createContext, useContext, useState } from "react";
 
 interface SettingsContextProps {
-  notificationsEnabled: boolean;
+  temperatureUnit: "Celsius" | "Fahrenheit";
+  windSpeedUnit: "km/h" | "m/s" | "Knots";
   is12HourTime: boolean;
-  setNotificationsEnabled: (enabled: boolean) => void;
-  setIs12HourTime: (enabled: boolean) => void;
+  setTemperatureUnit: (unit: "Celsius" | "Fahrenheit") => void;
+  setWindSpeedUnit: (unit: "km/h" | "m/s" | "Knots") => void;
+  setIs12HourTime: (value: boolean) => void;
 }
 
 const SettingsContext = createContext<SettingsContextProps | undefined>(undefined);
 
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [is12HourTime, setIs12HourTime] = useState(false);
+  const [temperatureUnit, setTemperatureUnit] = useState<"Celsius" | "Fahrenheit">("Celsius");
+  const [windSpeedUnit, setWindSpeedUnit] = useState<"km/h" | "m/s" | "Knots">("km/h");
+  const [is12HourTime, setIs12HourTime] = useState<boolean>(true);
 
   return (
     <SettingsContext.Provider
       value={{
-        notificationsEnabled,
+        temperatureUnit,
+        windSpeedUnit,
         is12HourTime,
-        setNotificationsEnabled,
+        setTemperatureUnit,
+        setWindSpeedUnit,
         setIs12HourTime,
       }}
     >

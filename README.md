@@ -77,5 +77,5 @@ Proactively addressed potential issues like invalid input, server errors, and of
 ## Author
 
 ### Sri Kailaash Kumar
-    - **GitHub** - https://github.com/maximistic
+    - GitHub - https://github.com/maximistic
     - LinkedIn - https://www.linkedin.com/in/srikailaashkumar-s/

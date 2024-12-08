@@ -1,49 +1,67 @@
-"use client";
-import React from "react";
+import React, { useState } from "react";
 import { useSettings } from "../context/SettingsContext";
 import "../globals.css";
 
 const Settings = () => {
   const {
-    notificationsEnabled,
+    temperatureUnit,
+    windSpeedUnit,
     is12HourTime,
-    setNotificationsEnabled,
+    setTemperatureUnit,
+    setWindSpeedUnit,
     setIs12HourTime,
   } = useSettings();
+
+  // State for notifications toggle
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
   return (
     <div className="p-8 bg-gray-900 text-white font-[family-name:var(--font-geist-sans)] rounded-lg">
       {/* Units Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Units Options */}
         <div className="md:col-span-2 bg-gray-800 p-6 rounded-lg">
           <h2 className="text-xl font-bold mb-6">Units</h2>
-          {[
-            { label: "Temperature", options: ["Celsius", "Fahrenheit"] },
-            { label: "Wind Speed", options: ["km/h", "m/s", "Knots"] },
-            { label: "Pressure", options: ["hPa", "Inches", "kPa", "mm"] },
-            { label: "Precipitation", options: ["Millimeters", "Inches"] },
-            { label: "Distance", options: ["Kilometers", "Miles"] },
-          ].map((unit, index) => (
-            <div key={index} className="mb-6">
-              <p className="font-semibold mb-2">{unit.label.toUpperCase()}</p>
-              <div className="flex space-x-4">
-                {unit.options.map((option) => (
-                  <button
-                    key={option}
-                    className="px-4 py-2 bg-gray-700 text-gray-300 hover:bg-gray-600 rounded-lg"
-                  >
-                    {option}
-                  </button>
-                ))}
-              </div>
+          {/* Temperature */}
+          <div className="mb-6">
+            <p className="font-semibold mb-2">TEMPERATURE</p>
+            <div className="flex space-x-4">
+              {["Celsius", "Fahrenheit"].map((unit) => (
+                <button
+                  key={unit}
+                  className={`px-4 py-2 rounded-lg ${
+                    temperatureUnit === unit
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-700 text-gray-300"
+                  }`}
+                  onClick={() => setTemperatureUnit(unit as "Celsius" | "Fahrenheit")}
+                >
+                  {unit}
+                </button>
+              ))}
             </div>
-          ))}
+          </div>
+          {/* Wind Speed */}
+          <div>
+            <p className="font-semibold mb-2">WIND SPEED</p>
+            <div className="flex space-x-4">
+              {["km/h", "m/s", "Knots"].map((unit) => (
+                <button
+                  key={unit}
+                  className={`px-4 py-2 rounded-lg ${
+                    windSpeedUnit === unit
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-700 text-gray-300"
+                  }`}
+                  onClick={() => setWindSpeedUnit(unit as "km/h" | "m/s" | "Knots")}
+                >
+                  {unit}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
-
-        {/* Right-Hand Cards */}
+        {/* Advanced Card */}
         <div className="space-y-6">
-          {/* Advanced Card */}
           <div className="bg-gray-800 p-6 rounded-lg">
             <h2 className="text-xl font-bold mb-4">Advanced</h2>
             <ul className="text-gray-400 mb-6">
