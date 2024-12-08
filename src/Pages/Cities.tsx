@@ -34,21 +34,21 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
   
       const newCity: City = {
         name: weatherData.city,
-        temp: weatherData.currentTemp.toString(),  // Ensure temperature is a string
+        temp: weatherData.currentTemp.toString(),  
         icon: weatherData.hourlyForecast[0]?.icon || "",
         hourlyForecast: weatherData.hourlyForecast.slice(0, 6).map((hour) => ({
           ...hour,
-          temp: hour.temp.toString(),  // Ensure hourly temperatures are strings
+          temp: hour.temp.toString(), 
         })),
-        time: new Date().toLocaleString(),  // Set current time as a string
-        timezone: weatherData.timezone || "UTC",  // Extract timezone or use "UTC"
+        time: new Date().toLocaleString(),  
+        timezone: weatherData.timezone || "UTC",  
       };
   
       addCity(newCity);
-      setError(null);  // Clear any previous error
+      setError(null); 
     } catch {
       setError("City not found or API error. Please try again.");
-      setTimeout(() => setError(null), 3000); // Hide error after 3 seconds
+      setTimeout(() => setError(null), 3000); 
     }
   }, [cities, addCity]);
   
@@ -75,8 +75,8 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
   };
 
   const handleDeleteAllCities = () => {
-    deleteAllCities(); // Deletes all cities from the list
-    setSelectedCity(null); // Clears selected city if all cities are deleted
+    deleteAllCities(); 
+    setSelectedCity(null); 
   };
 
   return (

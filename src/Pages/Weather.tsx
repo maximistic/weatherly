@@ -166,7 +166,7 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
         {/* Air conditions and explanation */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="mb-8 lg:mb-0">
-            <h3 className="text-lg font-semibold mb-4">Air Conditions</h3>
+            <h3 className="text-lg font-semibold mb-4 ">Air Conditions</h3>
             <div className="grid grid-cols-2 gap-4 bg-gray-800 p-4 rounded-lg h-full">
               <div
                 className="flex items-center justify-between cursor-pointer hover:bg-gray-700 p-2 rounded-md transition-all"
@@ -220,7 +220,7 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
           </div>
 
           <div
-            className={`pt-7 mt-11 bg-gray-800 p-3 rounded-lg shadow-lg ${
+            className={`pt-7 mt-12 bg-gray-800 p-3 rounded-lg shadow-lg ${
               activeCondition ? "block" : "hidden"
             }`}
           >
@@ -275,8 +275,8 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
         ) : (
           <p>Map unavailable for this location.</p>
         )}
-          <h3 className="text-lg font-semibold mb-4">5-Day Forecast</h3>
-          <div className="bg-gray-800 p-4 rounded-lg">
+          <h3 className="text-lg font-semibold mb-4 top-1/2 mt-10">5-Day Forecast</h3>
+          <div className="bg-gray-800 p-2 rounded-lg mt-0">
           {weatherData?.weeklyForecast.map((day, index) => {
             const splitTemp = day.temp ? day.temp.split("/") : [];
             const convertedTemp = splitTemp.length === 2
