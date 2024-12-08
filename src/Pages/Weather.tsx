@@ -269,15 +269,19 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
 
       {/* Map and 5-Day Forecast */}
       <div>
-      <h3 className="text-lg font-semibold mb-4">5-Day Forecast</h3>
+        <h3 className="text-lg font-semibold mb-4">Location Map</h3>
+        {weatherData?.city && weatherData?.lat && weatherData?.lon ? (
+          <MapComponent lat={weatherData.lat} lon={weatherData.lon} />
+        ) : (
+          <p>Map unavailable for this location.</p>
+        )}
+          <h3 className="text-lg font-semibold mb-4">5-Day Forecast</h3>
           <div className="bg-gray-800 p-4 rounded-lg">
           {weatherData?.weeklyForecast.map((day, index) => {
-            // Extract and convert both parts of the temperature (before and after the slash)
             const splitTemp = day.temp ? day.temp.split("/") : [];
             const convertedTemp = splitTemp.length === 2
               ? `${convertTemperature(parseFloat(splitTemp[0]))}/${convertTemperature(parseFloat(splitTemp[1]))}`
               : undefined;
-
             return (
               <div
                 key={index}
