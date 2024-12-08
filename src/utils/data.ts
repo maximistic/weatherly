@@ -55,6 +55,7 @@ interface CurrentWeatherData {
     sunrise: number;
     sunset: number;
   };
+  timezone: number; 
 }
 
 // Fetch geolocation using IP-API
@@ -92,9 +93,9 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
     const currentWeather = currentWeatherResponse.data as CurrentWeatherData;
     const forecastData = forecastResponse.data as ForecastData;
 
-    // Extract timezone from currentWeather response
+    // Extract timezone and handle time conversion
     const timezoneOffsetInSeconds = currentWeather.timezone;
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone; // Fallback to local timezone
+    const timezone = `UTC${timezoneOffsetInSeconds >= 0 ? "+" : ""}${timezoneOffsetInSeconds / 3600}`;
 
     const sunrise = new Date((currentWeather.sys.sunrise + timezoneOffsetInSeconds) * 1000).toLocaleTimeString([], {
       hour: "2-digit",
@@ -133,7 +134,7 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
       wind: `${currentWeather.wind.speed} km/h`,
       sunrise,
       sunset,
-      timezone, // Add timezone to the returned data
+      timezone, // Included timezone in the return object
       hourlyForecast,
       weeklyForecast,
     };
@@ -142,4 +143,3 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
     throw error;
   }
 };
-
