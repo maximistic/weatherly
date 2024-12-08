@@ -14,6 +14,7 @@ import {
 } from "../utils/data";
 import "../globals.css";
 import { useSettings } from "../context/SettingsContext";
+import MapComponent from "./MapComponent";
 
 const Weather = ({ searchQuery }: { searchQuery: string }) => {
   const { temperatureUnit, windSpeedUnit } = useSettings();
@@ -268,6 +269,16 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
       </div>
     </div>
   </div>
+
+        {/* Map Component */}
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold mb-4">Location Map</h3>
+          {weatherData?.city && weatherData?.lat && weatherData?.lon ? (
+            <MapComponent lat={weatherData.lat} lon={weatherData.lon} />
+          ) : (
+            <p>Map unavailable for this location.</p>
+          )}
+        </div>
 
         {/* Weekly Forecast */}
         <div className="lg:col-span-1 sm:col-span-2 mt-10">
