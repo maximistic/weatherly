@@ -18,7 +18,7 @@ const convertTemperature = (temp: number | string, toUnit: "Celsius" | "Fahrenhe
 
 type City = {
   name: string;
-  temp: string;
+  temp: string;  // temp should be a string
   icon: string;
   time: string;
   timezone: string;
@@ -40,11 +40,14 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
     try {
       const weatherData = await fetchWeatherData(query);
 
+      // Convert temp to string
       const newCity: City = {
         name: weatherData.city,
-        temp: weatherData.currentTemp,
+        temp: weatherData.currentTemp.toString(), // Convert to string
         icon: weatherData.hourlyForecast[0]?.icon || "",
         hourlyForecast: weatherData.hourlyForecast.slice(0, 6),
+        time: "", // You can add logic for time if needed
+        timezone: "", // Add logic for timezone if needed
       };
 
       addCity(newCity);
@@ -150,8 +153,7 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
               />
               <div>
                 <p className="text-xl font-bold">
-                  {convertTemperature(Number(selectedCity.temp), temperatureUnit)}°
-                  {temperatureUnit === "Celsius" ? "C" : "F"}
+                  {convertTemperature(Number(selectedCity.temp), temperatureUnit)}°{temperatureUnit === "Celsius" ? "C" : "F"}
                 </p>
               </div>
             </div>
