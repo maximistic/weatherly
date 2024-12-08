@@ -3,6 +3,7 @@ import Image from "next/image";
 import { fetchWeatherData } from "../utils/data";
 import { FiTrash } from "react-icons/fi";
 import { useCities } from "../context/CitiesContext";
+import "../globals.css";
 
 type City = {
   name: string;
