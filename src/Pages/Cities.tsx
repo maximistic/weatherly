@@ -6,19 +6,9 @@ import { useCities } from "../context/CitiesContext";
 import { useSettings } from "../context/SettingsContext";
 import "../globals.css";
 
-const convertTemperature = (temp: number | string, toUnit: "Celsius" | "Fahrenheit"): string => {
-  if (typeof temp === "string" || temp === undefined) return temp.toString();
-
-  if (toUnit === "Fahrenheit") {
-    return ((temp * 9) / 5 + 32).toFixed(1); // Convert to Fahrenheit
-  } else {
-    return (((temp - 32) * 5) / 9).toFixed(1); // Convert to Celsius
-  }
-};
-
 type City = {
   name: string;
-  temp: string;  // temp should be a string
+  temp: string;
   icon: string;
   time: string;
   timezone: string;
@@ -39,17 +29,17 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
     }
     try {
       const weatherData = await fetchWeatherData(query);
-
-      // Convert temp to string
+  
       const newCity: City = {
         name: weatherData.city,
-        temp: weatherData.currentTemp.toString(), // Convert to string
+        temp: weatherData.currentTemp.toString(),  
         icon: weatherData.hourlyForecast[0]?.icon || "",
-        hourlyForecast: weatherData.hourlyForecast.slice(0, 6),
-        time: "", // You can add logic for time if needed
-        timezone: "", // Add logic for timezone if needed
+        hourlyForecast: weatherData.hourlyForecast.slice(0, 6).map((hour) => ({
+          ...hour,
+          temp: hour.temp.toString(), 
+        })),
       };
-
+  
       addCity(newCity);
       setError(null);
     } catch {
@@ -57,6 +47,15 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
       setTimeout(() => setError(null), 3000); // Hide error after 3 seconds
     }
   }, [cities, addCity]);
+
+  const convertTemperature = (temp: number | string, toUnit: "Celsius" | "Fahrenheit"): string => {
+    if (typeof temp === "string" || temp === undefined) return temp.toString();
+  
+    if (toUnit === "Fahrenheit") {
+      return ((temp * 9) / 5 + 32).toFixed(1); 
+    }
+    return temp.toFixed(1); 
+  };
 
   useEffect(() => {
     if (searchQuery) {
@@ -153,7 +152,8 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
               />
               <div>
                 <p className="text-xl font-bold">
-                  {convertTemperature(Number(selectedCity.temp), temperatureUnit)}°{temperatureUnit === "Celsius" ? "C" : "F"}
+                  {convertTemperature(Number(selectedCity.temp), temperatureUnit)}°
+                  {temperatureUnit === "Celsius" ? "C" : "F"}
                 </p>
               </div>
             </div>

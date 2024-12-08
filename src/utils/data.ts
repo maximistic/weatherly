@@ -6,7 +6,7 @@ const IP_API_URL = "https://api.ipgeolocation.io/ipgeo?apiKey=fcd8776a8d3f46b8a4
 
 export interface HourlyForecast {
   time: string;
-  temp: string;
+  temp: number;
   icon: string;
 }
 
