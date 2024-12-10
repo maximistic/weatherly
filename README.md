@@ -31,7 +31,7 @@ Weatherly is a Weather Forecasting tool built with Next.js and styled with Tailw
 
 5. **Pro Tip**:
 ![image](https://github.com/user-attachments/assets/d4da2bec-7a4d-4918-aa99-c64b192c7974)
-   - Click OK and continue, this has no impact on the application.
+   - In the Weather Tab (Map part), Click OK and continue, this has no impact on the application.
 
 ## Features
 

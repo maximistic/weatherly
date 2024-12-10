@@ -65,7 +65,6 @@ const Settings = () => {
         <div className="bg-gray-800 p-6 rounded-lg">
           <h2 className="text-xl font-bold mb-4">Advanced</h2>
           <ul className="text-gray-400 mb-6">
-            <li>Ad-free</li>
             <li>Health activities overview</li>
             <li>Severe weather notifications</li>
           </ul>
