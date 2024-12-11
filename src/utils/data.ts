@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_KEY = "af05fb7faf92f827af6f0f25123dc259"; 
+const API_KEY = "af05fb7faf92f827af6f0f25123dc259";
 const BASE_URL = "https://api.openweathermap.org/data/2.5/";
 const IP_API_URL = "https://api.ipgeolocation.io/ipgeo?apiKey=fcd8776a8d3f46b8a413e0682a186831";
 
@@ -31,7 +31,6 @@ interface WeatherData {
   rain?: {
     [key: string]: number;
   };
-  
 }
 
 interface ForecastData {
@@ -74,34 +73,37 @@ export const fetchGeolocation = async (): Promise<{ city: string; lat: number; l
   }
 };
 
+type WeatherFetchParams = 
+  | { city: string } 
+  | { lat: number; lon: number };
 
-export const fetchWeatherData = async (city?: string, lat?: number, lon?: number) => {
-  let currentWeatherUrl, forecastUrl;
+  export const fetchWeatherData = async (
+    query: string | undefined,
+    lat?: number,
+    lon?: number
+  ) => {
+    const currentWeatherUrl = query
+      ? `${BASE_URL}weather?q=${query}&units=metric&appid=${API_KEY}`
+      : `${BASE_URL}weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
+  
+    const forecastUrl = query
+      ? `${BASE_URL}forecast?q=${query}&units=metric&appid=${API_KEY}`
+      : `${BASE_URL}forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
+  
+    try {
+      const [currentWeatherResponse, forecastResponse] = await Promise.all([
+        axios.get(currentWeatherUrl),
+        axios.get(forecastUrl),
+      ]);
+  
+      const currentWeather = currentWeatherResponse.data as CurrentWeatherData;
+      const forecastData = forecastResponse.data as ForecastData;
 
-  if (city) {
-    currentWeatherUrl = `${BASE_URL}weather?q=${city}&units=metric&appid=${API_KEY}`;
-    forecastUrl = `${BASE_URL}forecast?q=${city}&units=metric&appid=${API_KEY}`;
-  } else if (lat && lon) {
-    currentWeatherUrl = `${BASE_URL}weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
-    forecastUrl = `${BASE_URL}forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
-  } else {
-    throw new Error("Either city name or latitude/longitude must be provided");
-  }
-
-  try {
-    const [currentWeatherResponse, forecastResponse] = await Promise.all([
-      axios.get(currentWeatherUrl),
-      axios.get(forecastUrl),
-    ]);
-
-    const currentWeather = currentWeatherResponse.data as CurrentWeatherData;
-    const forecastData = forecastResponse.data as ForecastData;
-
-    const sunrise = new Date(currentWeather.sys.sunrise * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    const sunset = new Date(currentWeather.sys.sunset * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const sunrise = new Date(currentWeather.sys.sunrise * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    const sunset = new Date(currentWeather.sys.sunset * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
     const hourlyForecast: HourlyForecast[] = forecastData.list.slice(0, 6).map((item: WeatherData) => ({
-      time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       temp: Math.round(item.main.temp),
       icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
     }));
@@ -110,7 +112,7 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
       .filter((_item: WeatherData, index: number) => index % 8 === 0)
       .slice(0, 7)
       .map((item: WeatherData) => ({
-        day: new Date(item.dt * 1000).toLocaleDateString([], { weekday: 'short' }),
+        day: new Date(item.dt * 1000).toLocaleDateString([], { weekday: "short" }),
         condition: item.weather[0].main,
         temp: `${Math.round(item.main.temp_max)}/${Math.round(item.main.temp_min)}`,
         icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
@@ -127,7 +129,6 @@ export const fetchWeatherData = async (city?: string, lat?: number, lon?: number
       sunset,
       hourlyForecast,
       weeklyForecast,
-      timezone: "",
       lat: currentWeather.coord.lat,
       lon: currentWeather.coord.lon,
     };
