@@ -38,7 +38,7 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeCondition, setActiveCondition] = useState<string | null>(null);
-  const [ setCurrentLocation] = useState<string | null>(null);
+  const [currentLocation, setCurrentLocation] = useState<string | null>(null);
 
   const convertTemperature = (temp: number | undefined) =>
     temp !== undefined
@@ -80,10 +80,10 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
   useEffect(() => {
     const savedLocation = localStorage.getItem("weather-location");
     const locationToFetch = searchQuery || savedLocation || null;
-
-    setCurrentLocation(locationToFetch);
-    fetchData(locationToFetch);
-  }, [searchQuery]);
+  
+    setCurrentLocation(locationToFetch); 
+    fetchData(locationToFetch ?? undefined);  
+  }, [searchQuery]);  
 
   const handleFetchCurrentLocation = () => {
     localStorage.removeItem("weather-location");
@@ -170,6 +170,7 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
               title="Fetch Current Location"
             >
               <FaLocationCrosshairs size={24} />
+              <p className="text-lg text-gray-400">Current Location: {currentLocation || "Fetching location..."}</p>
             </button>
           </div>
 

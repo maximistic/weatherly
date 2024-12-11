@@ -133,6 +133,7 @@ export const fetchWeatherData = async ({ city, lat, lon }: WeatherFetchParams) =
         weeklyForecast,
         lat: currentWeather.coord.lat,
         lon: currentWeather.coord.lon,
+        timezone: "",
       };
     } catch (error) {
       console.error("Error fetching weather data:", error);
