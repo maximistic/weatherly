@@ -127,6 +127,7 @@ export const fetchGeolocation = async (): Promise<{ city: string; lat: number; l
       weeklyForecast,
       lat: currentWeather.coord.lat,
       lon: currentWeather.coord.lon,
+      timezone: "Asia/Kolkata",
     };
   } catch (error) {
     console.error("Error fetching weather data:", error);
