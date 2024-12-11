@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-color-light: #ffffff;
+  --text-color-light: #000000;
+  --bg-color-dark: #121212;
+  --text-color-dark: #ffffff;
+  --bg-secondary-light: #f4f4f4;
+}
+
+html.light {
+  --bg-color: var(--bg-color-light);
+  --text-color: var(--text-color-light);
+}
+
+html.dark {
+  --bg-color: var(--bg-color-dark);
+  --text-color: var(--text-color-dark);
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+input, button {
+  outline: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+.sidebar{
+  margin-right: 16px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1a1f29 #353d52; 
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #2d3748; 
+  border-radius: 8px; 
+}
+
+*::-webkit-scrollbar-track {
+  background-color: #2d3748; 
+  border-radius: 8px; 
+}
