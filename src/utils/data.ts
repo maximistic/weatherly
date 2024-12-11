@@ -73,67 +73,69 @@ export const fetchGeolocation = async (): Promise<{ city: string; lat: number; l
   }
 };
 
-type WeatherFetchParams = 
-  | { city: string } 
-  | { lat: number; lon: number };
+interface WeatherFetchParams {
+  city?: string; // Optional to allow flexibility
+  lat?: number;
+  lon?: number;
+}
 
-  export const fetchWeatherData = async (
-    query: string | undefined,
-    lat?: number,
-    lon?: number
-  ) => {
-    const currentWeatherUrl = query
-      ? `${BASE_URL}weather?q=${query}&units=metric&appid=${API_KEY}`
-      : `${BASE_URL}weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
-  
-    const forecastUrl = query
-      ? `${BASE_URL}forecast?q=${query}&units=metric&appid=${API_KEY}`
-      : `${BASE_URL}forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
-  
-    try {
-      const [currentWeatherResponse, forecastResponse] = await Promise.all([
-        axios.get(currentWeatherUrl),
-        axios.get(forecastUrl),
-      ]);
+export const fetchWeatherData = async ({ city, lat, lon }: WeatherFetchParams) => {
+  if (!city && (lat === undefined || lon === undefined)) {
+    throw new Error("You must provide either a city or latitude and longitude.");
+  }
+
+  const currentWeatherUrl = city
+    ? `${BASE_URL}weather?q=${city}&units=metric&appid=${API_KEY}`
+    : `${BASE_URL}weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
+
+  const forecastUrl = city
+    ? `${BASE_URL}forecast?q=${city}&units=metric&appid=${API_KEY}`
+    : `${BASE_URL}forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
+
+  try {
+    const [currentWeatherResponse, forecastResponse] = await Promise.all([
+      axios.get(currentWeatherUrl),
+      axios.get(forecastUrl),
+    ]);
   
       const currentWeather = currentWeatherResponse.data as CurrentWeatherData;
       const forecastData = forecastResponse.data as ForecastData;
-
-    const sunrise = new Date(currentWeather.sys.sunrise * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    const sunset = new Date(currentWeather.sys.sunset * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-
-    const hourlyForecast: HourlyForecast[] = forecastData.list.slice(0, 6).map((item: WeatherData) => ({
-      time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-      temp: Math.round(item.main.temp),
-      icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
-    }));
-
-    const weeklyForecast: WeeklyForecast[] = forecastData.list
-      .filter((_item: WeatherData, index: number) => index % 8 === 0)
-      .slice(0, 7)
-      .map((item: WeatherData) => ({
-        day: new Date(item.dt * 1000).toLocaleDateString([], { weekday: "short" }),
-        condition: item.weather[0].main,
-        temp: `${Math.round(item.main.temp_max)}/${Math.round(item.main.temp_min)}`,
+  
+      const sunrise = new Date(currentWeather.sys.sunrise * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      const sunset = new Date(currentWeather.sys.sunset * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  
+      const hourlyForecast: HourlyForecast[] = forecastData.list.slice(0, 6).map((item: WeatherData) => ({
+        time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        temp: Math.round(item.main.temp),
         icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
       }));
-
-    return {
-      city: currentWeather.name,
-      currentTemp: currentWeather.main.temp,
-      temp_max: currentWeather.main.temp_max,
-      temp_min: currentWeather.main.temp_min,
-      realFeel: currentWeather.main.feels_like,
-      wind: currentWeather.wind.speed,
-      sunrise,
-      sunset,
-      hourlyForecast,
-      weeklyForecast,
-      lat: currentWeather.coord.lat,
-      lon: currentWeather.coord.lon,
-    };
-  } catch (error) {
-    console.error("Error fetching weather data:", error);
-    throw error;
-  }
-};
+  
+      const weeklyForecast: WeeklyForecast[] = forecastData.list
+        .filter((_item: WeatherData, index: number) => index % 8 === 0)
+        .slice(0, 7)
+        .map((item: WeatherData) => ({
+          day: new Date(item.dt * 1000).toLocaleDateString([], { weekday: "short" }),
+          condition: item.weather[0].main,
+          temp: `${Math.round(item.main.temp_max)}/${Math.round(item.main.temp_min)}`,
+          icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
+        }));
+  
+      return {
+        city: currentWeather.name,
+        currentTemp: currentWeather.main.temp,
+        temp_max: currentWeather.main.temp_max,
+        temp_min: currentWeather.main.temp_min,
+        realFeel: currentWeather.main.feels_like,
+        wind: currentWeather.wind.speed,
+        sunrise,
+        sunset,
+        hourlyForecast,
+        weeklyForecast,
+        lat: currentWeather.coord.lat,
+        lon: currentWeather.coord.lon,
+      };
+    } catch (error) {
+      console.error("Error fetching weather data:", error);
+      throw error;
+    }
+  };  

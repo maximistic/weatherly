@@ -38,7 +38,7 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeCondition, setActiveCondition] = useState<string | null>(null);
-  const [currentLocation, setCurrentLocation] = useState<string | null>(null);
+  const [ setCurrentLocation] = useState<string | null>(null);
 
   const convertTemperature = (temp: number | undefined) =>
     temp !== undefined
