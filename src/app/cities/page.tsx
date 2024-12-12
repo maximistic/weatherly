@@ -5,6 +5,7 @@ import { fetchWeatherData } from "@/utils/data";
 import { FiTrash } from "react-icons/fi";
 import { useCities } from "@/context/CitiesContext";
 import { useSettings } from "@/context/SettingsContext";
+import { useSearchQuery } from "@/context/SearchQueryContext";
 import "../globals.css";
 
 export type City = {
@@ -16,12 +17,13 @@ export type City = {
   timezone: string;
 };
 
-const Cities = ({ searchQuery }: { searchQuery: string }) => {
+const Cities = () => {
   const { cities, addCity, deleteCity, deleteAllCities } = useCities();
   const { temperatureUnit } = useSettings();
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const { searchQuery } = useSearchQuery();
 
   useEffect(() => {
     const theme = document.documentElement.className;

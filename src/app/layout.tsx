@@ -5,8 +5,11 @@ import Searchbar from "../components/SearchBar";
 import { usePathname } from "next/navigation";
 import localFont from "next/font/local";
 import "./globals.css";
+
 import { SettingsProvider } from "@/context/SettingsContext";
 import { CitiesProvider } from "@/context/CitiesContext";
+import { SearchQueryProvider } from "@/context/SearchQueryContext";
+
 import Page from "./page";
 import Pricing from "@/Pages/Pricing";
 import SignUp from "@/Pages/SignUp";
@@ -50,6 +53,7 @@ export default function RootLayout({}: { children: React.ReactNode }) {
     <html lang="en" className={`${theme}`}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <SettingsProvider>
+          <SearchQueryProvider>
           <CitiesProvider>
           <div className="flex flex-row h-screen gap-2">
             <Sidebar
@@ -75,6 +79,7 @@ export default function RootLayout({}: { children: React.ReactNode }) {
             </div>
           </div>
           </CitiesProvider>
+          </SearchQueryProvider>
         </SettingsProvider>
       </body>
     </html>
