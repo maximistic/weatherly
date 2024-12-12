@@ -20,7 +20,7 @@ type CitiesContextType = {
 
 const CitiesContext = createContext<CitiesContextType | undefined>(undefined);
 
-export const CitiesProvider = ({ children }: React.PropsWithChildren<{}>) => {
+export const CitiesProvider = ({ children }: React.PropsWithChildren<object>) => {
   const [cities, setCities] = useState<City[]>([]);
 
   useEffect(() => {

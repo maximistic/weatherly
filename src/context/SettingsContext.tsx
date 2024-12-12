@@ -26,7 +26,7 @@ const SettingsContext = createContext<SettingsContextType | undefined>(undefined
 
 const SETTINGS_KEY = "userSettings";
 
-export const SettingsProvider = ({ children }: React.PropsWithChildren<{}>) => {
+export const SettingsProvider = ({ children }: React.PropsWithChildren<object>) => {
   const [temperatureUnit, setTemperatureUnit] = useState<TemperatureUnit>(TemperatureUnit.Celsius);
   const [windSpeedUnit, setWindSpeedUnit] = useState<WindSpeedUnit>(WindSpeedUnit.KmPerHour);
   const [is12HourTime, setIs12HourTime] = useState<boolean>(true);

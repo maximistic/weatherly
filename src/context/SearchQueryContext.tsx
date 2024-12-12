@@ -9,7 +9,7 @@ type SearchQueryContextType = {
 
 const SearchQueryContext = createContext<SearchQueryContextType | undefined>(undefined);
 
-export const SearchQueryProvider = ({ children }: React.PropsWithChildren<{}>) => {
+export const SearchQueryProvider = ({ children }: React.PropsWithChildren<object>) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
