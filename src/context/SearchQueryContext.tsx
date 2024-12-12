@@ -1,24 +1,29 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
-type SearchQueryContextType = {
+const SearchQueryContext = createContext<{
   searchQuery: string;
   setSearchQuery: (query: string) => void;
-};
+}>({
+  searchQuery: "",
+  setSearchQuery: () => {},
+});
 
-const SearchQueryContext = createContext<SearchQueryContextType | undefined>(undefined);
-
-export const SearchQueryProvider = ({ children }: React.PropsWithChildren<object>) => {
+export const SearchQueryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     const savedSearchQuery = localStorage.getItem("searchQuery");
-    if (savedSearchQuery) setSearchQuery(savedSearchQuery);
+    if (savedSearchQuery) {
+      setSearchQuery(savedSearchQuery);
+    }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("searchQuery", searchQuery);
+    if (searchQuery) {
+      localStorage.setItem("searchQuery", searchQuery);
+    }
   }, [searchQuery]);
 
   return (
@@ -28,10 +33,4 @@ export const SearchQueryProvider = ({ children }: React.PropsWithChildren<object
   );
 };
 
-export const useSearchQuery = (): SearchQueryContextType => {
-  const context = useContext(SearchQueryContext);
-  if (!context) {
-    throw new Error("useSearchQuery must be used within a SearchQueryProvider");
-  }
-  return context;
-};
+export const useSearchQuery = () => useContext(SearchQueryContext);

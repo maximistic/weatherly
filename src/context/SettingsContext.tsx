@@ -1,43 +1,31 @@
-"use client";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-
-enum TemperatureUnit {
-  Celsius = "Celsius",
-  Fahrenheit = "Fahrenheit",
-}
-
-enum WindSpeedUnit {
-  KmPerHour = "km/h",
-  MetersPerSecond = "m/s",
-  Knots = "Knots",
-}
-
-interface SettingsContextType {
-  temperatureUnit: TemperatureUnit;
-  windSpeedUnit: WindSpeedUnit;
+interface SettingsContextProps {
+  temperatureUnit: "Celsius" | "Fahrenheit";
+  windSpeedUnit: "km/h" | "m/s" | "Knots";
   is12HourTime: boolean;
-  setTemperatureUnit: (unit: TemperatureUnit) => void;
-  setWindSpeedUnit: (unit: WindSpeedUnit) => void;
+  setTemperatureUnit: (unit: "Celsius" | "Fahrenheit") => void;
+  setWindSpeedUnit: (unit: "km/h" | "m/s" | "Knots") => void;
   setIs12HourTime: (value: boolean) => void;
 }
 
-const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
+const SettingsContext = createContext<SettingsContextProps | undefined>(undefined);
 
 const SETTINGS_KEY = "userSettings";
 
-export const SettingsProvider = ({ children }: React.PropsWithChildren<object>) => {
-  const [temperatureUnit, setTemperatureUnit] = useState<TemperatureUnit>(TemperatureUnit.Celsius);
-  const [windSpeedUnit, setWindSpeedUnit] = useState<WindSpeedUnit>(WindSpeedUnit.KmPerHour);
+export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [temperatureUnit, setTemperatureUnit] = useState<"Celsius" | "Fahrenheit">("Celsius");
+  const [windSpeedUnit, setWindSpeedUnit] = useState<"km/h" | "m/s" | "Knots">("km/h");
   const [is12HourTime, setIs12HourTime] = useState<boolean>(true);
 
   useEffect(() => {
     const savedSettings = localStorage.getItem(SETTINGS_KEY);
     if (savedSettings) {
       const parsedSettings = JSON.parse(savedSettings);
-      setTemperatureUnit(parsedSettings.temperatureUnit || TemperatureUnit.Celsius);
-      setWindSpeedUnit(parsedSettings.windSpeedUnit || WindSpeedUnit.KmPerHour);
-      setIs12HourTime(parsedSettings.is12HourTime ?? true);
+      if (parsedSettings.temperatureUnit) setTemperatureUnit(parsedSettings.temperatureUnit);
+      if (parsedSettings.windSpeedUnit) setWindSpeedUnit(parsedSettings.windSpeedUnit);
+      if (typeof parsedSettings.is12HourTime === "boolean")
+        setIs12HourTime(parsedSettings.is12HourTime);
     }
   }, []);
 
@@ -62,7 +50,7 @@ export const SettingsProvider = ({ children }: React.PropsWithChildren<object>) 
   );
 };
 
-export const useSettings = (): SettingsContextType => {
+export const useSettings = () => {
   const context = useContext(SettingsContext);
   if (!context) {
     throw new Error("useSettings must be used within a SettingsProvider");

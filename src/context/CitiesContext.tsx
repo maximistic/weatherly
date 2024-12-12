@@ -1,5 +1,3 @@
-"use client";
-
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 type City = {
@@ -15,12 +13,12 @@ type CitiesContextType = {
   cities: City[];
   addCity: (city: City) => void;
   deleteCity: (name: string) => void;
-  deleteAllCities: () => void;
+  deleteAllCities: () => void; 
 };
 
 const CitiesContext = createContext<CitiesContextType | undefined>(undefined);
 
-export const CitiesProvider = ({ children }: React.PropsWithChildren<object>) => {
+export const CitiesProvider = ({ children }: { children: React.ReactNode }) => {
   const [cities, setCities] = useState<City[]>([]);
 
   useEffect(() => {
@@ -34,36 +32,42 @@ export const CitiesProvider = ({ children }: React.PropsWithChildren<object>) =>
 
   useEffect(() => {
     const channel = new BroadcastChannel("cities-sync");
-
-    const syncCities = (event: MessageEvent) => {
+    channel.onmessage = (event) => {
       if (event.data.type === "SYNC_CITIES") {
         setCities(event.data.payload);
       }
     };
-
-    channel.addEventListener("message", syncCities);
-
     return () => channel.close();
   }, []);
 
-  const updateCitiesAndBroadcast = (updatedCities: City[]) => {
-    setCities(updatedCities);
-    const channel = new BroadcastChannel("cities-sync");
-    channel.postMessage({ type: "SYNC_CITIES", payload: updatedCities });
-    channel.close();
-  };
-
   const addCity = (city: City) => {
     if (cities.some((c) => c.name === city.name)) return;
-    updateCitiesAndBroadcast([...cities, city]);
+    const updatedCities = [...cities, city];
+    setCities(updatedCities);
+
+    new BroadcastChannel("cities-sync").postMessage({
+      type: "SYNC_CITIES",
+      payload: updatedCities,
+    });
   };
 
   const deleteCity = (name: string) => {
-    updateCitiesAndBroadcast(cities.filter((city) => city.name !== name));
+    const updatedCities = cities.filter((city) => city.name !== name);
+    setCities(updatedCities);
+
+    new BroadcastChannel("cities-sync").postMessage({
+      type: "SYNC_CITIES",
+      payload: updatedCities,
+    });
   };
 
   const deleteAllCities = () => {
-    updateCitiesAndBroadcast([]);
+    setCities([]); 
+
+    new BroadcastChannel("cities-sync").postMessage({
+      type: "SYNC_CITIES",
+      payload: [],
+    });
   };
 
   return (
