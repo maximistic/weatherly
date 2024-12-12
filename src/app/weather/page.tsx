@@ -7,7 +7,6 @@ import {
   WiSunrise,
   WiSunset,
 } from "react-icons/wi";
-import { FaLocationCrosshairs } from "react-icons/fa6";
 import {
   fetchWeatherData,
   fetchGeolocation,
@@ -35,11 +34,6 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
     lon: number;
   } | null>(null);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [activeCondition, setActiveCondition] = useState<string | null>(null);
-  const [currentLocation, setCurrentLocation] = useState<string | null>(null);
-
   const convertTemperature = (temp: number | undefined) =>
     temp !== undefined
       ? temperatureUnit === "Fahrenheit"
@@ -54,6 +48,10 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
     return `${speed} km/h`;
   };
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [activeCondition, setActiveCondition] = useState<string | null>(null);
+
   const fetchData = async (query?: string) => {
     setLoading(true);
     setError(null);
@@ -64,11 +62,6 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
             fetchWeatherData(undefined, geo.lat, geo.lon)
           );
       setWeatherData(data);
-
-      if (query) {
-        localStorage.setItem("weather-location", query);
-      }
-
       setLoading(false);
     } catch (err) {
       console.error("Error fetching weather data:", err);
@@ -78,25 +71,8 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
   };
 
   useEffect(() => {
-    const savedLocation = localStorage.getItem("weather-location");
-    const locationToFetch = searchQuery || savedLocation || null;
-  
-    setCurrentLocation(locationToFetch); 
-    fetchData(locationToFetch ?? undefined);  
-  }, [searchQuery]);  
-
-  const handleFetchCurrentLocation = () => {
-    localStorage.removeItem("weather-location");
-    fetchGeolocation()
-      .then((geo) => {
-        setCurrentLocation(null);
-        fetchData(`${geo.lat},${geo.lon}`);
-      })
-      .catch((err) => {
-        console.error("Error fetching current location:", err);
-        setError("Could not fetch current location.");
-      });
-  };
+    fetchData(searchQuery);
+  }, [searchQuery]);
 
   if (loading) return <div className="text-white">Loading...</div>;
   if (error)
@@ -164,14 +140,6 @@ const Weather = ({ searchQuery }: { searchQuery: string }) => {
                 height={128}
               />
             </div>
-            <button
-              onClick={handleFetchCurrentLocation}
-              className="bg-blue-600 text-white p-2 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-500 transition-all"
-              title="Fetch Current Location"
-            >
-              <FaLocationCrosshairs size={24} />
-              <p className="text-lg text-gray-400">Current Location: {currentLocation || "Fetching location..."}</p>
-            </button>
           </div>
 
         {/* Today's hourly forecast */}

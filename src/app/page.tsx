@@ -25,7 +25,7 @@ const Page: React.FC<PageProps> = ({ searchQuery }) => {
           <div className="content">
             {pathname === "/" && <Weather searchQuery={query} />}
             {pathname === "/weather" && <Weather searchQuery={query} />}
-            {pathname === "/cities" && <Cities searchQuery={searchQuery} />}
+            {pathname === "/cities" && <Cities searchQuery={query} />}
             {pathname === "/settings" && <Settings />}
           </div>
         </div>
