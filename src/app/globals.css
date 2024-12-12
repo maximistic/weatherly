@@ -10,6 +10,9 @@
   --bg-secondary-light: #f4f4f4;
 
   --bg-button: #f71111;
+
+  --bg-try-light: rgb(134 239 172);
+  
 }
 
 html.light {
@@ -38,6 +41,13 @@ button.tru{
 button.settings{
   background-color: var(--bg-color);
   color: var(--text-color);
+  border: var(--text-color) solid 1px;
+}
+
+form.tru {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border: var(--text-color) solid 1px;
 }
 
 div.tru {

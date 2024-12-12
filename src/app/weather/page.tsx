@@ -63,12 +63,10 @@ const Weather = () => {
     }
   };
 
-  // Fetch weather data based on the searchQuery
   useEffect(() => {
     if (searchQuery) {
       fetchData(searchQuery);
     } else {
-      // Default to Coimbatore if no search query is present
       fetchData("Coimbatore");
     }
   }, [searchQuery]);
@@ -106,9 +104,6 @@ const Weather = () => {
             <div className="flex items-center">
               <div>
                 <h1 className={`text-3xl font-bold`}>{weatherData?.city}</h1>
-                <button onClick={handleLocationFetch} className="ml-4">
-                  <FaCrosshairs size={24} />
-                </button>
                 <div className="flex items-center space-x-4 mt-2">
                   <div className="flex items-center">
                     <WiThermometer size={24} className="mr-2 text-red-400" />
@@ -147,6 +142,9 @@ const Weather = () => {
                 width={128}
                 height={128}
               />
+                <button onClick={handleLocationFetch} className="ml-4">
+                  <FaCrosshairs size={24} />
+                </button>
             </div>
           </div>
 

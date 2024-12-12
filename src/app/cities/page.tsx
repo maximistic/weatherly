@@ -44,7 +44,7 @@ const Cities = () => {
             temp: hour.temp.toString(),
           })),
           time: new Date().toLocaleString(),
-          timezone: weatherData.timezone, // Ensure timezone is a string
+          timezone: weatherData.timezone,
         };
   
         addCity(newCity);

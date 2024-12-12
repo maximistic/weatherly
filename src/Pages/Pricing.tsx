@@ -8,54 +8,23 @@ const Pricing: React.FC = () => {
   ];
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: '100vh',
-      backgroundColor: '#f8f9fa',
-      padding: '20px',
-    }}>
-      <h1 style={{ marginBottom: '20px' }}>Pricing Plans</h1>
-      <div style={{
-        display: 'flex',
-        gap: '20px',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-      }}>
+    <div className="flex flex-col items-center bg-color-light p-5">
+      <h1 className="text-3xl font-semibold mb-8">Pricing Plans</h1>
+      <div className="flex gap-6 flex-wrap justify-center">
         {plans.map((plan) => (
-          <div 
+          <div
             key={plan.name}
-            style={{
-              border: '1px solid #ccc',
-              borderRadius: '10px',
-              padding: '20px',
-              width: '250px',
-              backgroundColor: '#fff',
-              textAlign: 'center',
-              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-            }}
+            className="border border-text-color-dark rounded-lg p-6 w-[250px] tru text-center shadow-lg"
           >
-            <h2 style={{ marginBottom: '10px' }}>{plan.name}</h2>
-            <h3 style={{ marginBottom: '20px' }}>{plan.price}</h3>
-            <ul style={{ listStyle: 'none', padding: 0 }}>
+            <h2 className="text-xl font-bold mb-4">{plan.name}</h2>
+            <h3 className="text-lg mb-6">{plan.price}</h3>
+            <ul className="list-none p-0 mb-6">
               {plan.features.map((feature, index) => (
-                <li key={index} style={{ marginBottom: '10px' }}>{feature}</li>
+                <li key={index} className="mb-2">{feature}</li>
               ))}
             </ul>
-            <button 
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#007bff',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                marginTop: '10px',
-              }}
-            >
-              Choose a Plan
+            <button className="px-6 py-2 bg-bg-button text-white rounded-lg cursor-pointer mt-4 settings">
+              Buy Plan
             </button>
           </div>
         ))}

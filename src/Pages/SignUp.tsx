@@ -18,28 +18,15 @@ const SignUp: React.FC = () => {
   };
 
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: '100vh',
-      backgroundColor: '#f8f9fa',
-      padding: '20px',
-    }}>
+    <div className="flex items-center justify-center bg-color-light p-5">
       <form 
         onSubmit={handleSubmit}
-        style={{
-          width: '100%',
-          maxWidth: '400px',
-          backgroundColor: '#fff',
-          padding: '20px',
-          borderRadius: '10px',
-          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
-        }}
+        className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg tru"
       >
-        <h2 style={{ marginBottom: '20px', textAlign: 'center' }}>Sign Up</h2>
-        <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="name" style={{ display: 'block', marginBottom: '5px' }}>Name</label>
+        <h2 className="text-2xl font-semibold text-center mb-6">Sign Up</h2>
+        
+        <div className="mb-4 tru">
+          <label htmlFor="name" className="block mb-2 text-sm font-medium text-text-color-dark">Name</label>
           <input 
             type="text"
             name="name"
@@ -47,16 +34,12 @@ const SignUp: React.FC = () => {
             value={formData.name}
             onChange={handleChange}
             required
-            style={{
-              width: '100%',
-              padding: '10px',
-              border: '1px solid #ccc',
-              borderRadius: '5px',
-            }}
+            className="w-full p-3 border border-gray-300 rounded-md"
           />
         </div>
-        <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="email" style={{ display: 'block', marginBottom: '5px' }}>Email</label>
+
+        <div className="mb-4 tru">
+          <label htmlFor="email" className="block mb-2 text-sm font-medium text-text-color-dark">Email</label>
           <input 
             type="email"
             name="email"
@@ -64,16 +47,12 @@ const SignUp: React.FC = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            style={{
-              width: '100%',
-              padding: '10px',
-              border: '1px solid #ccc',
-              borderRadius: '5px',
-            }}
+            className="w-full p-3 border border-gray-300 rounded-md"
           />
         </div>
-        <div style={{ marginBottom: '15px' }}>
-          <label htmlFor="password" style={{ display: 'block', marginBottom: '5px' }}>Password</label>
+
+        <div className="mb-4 tru">
+          <label htmlFor="password" className="block mb-2 text-sm font-medium text-text-color-dark">Password</label>
           <input 
             type="password"
             name="password"
@@ -81,26 +60,13 @@ const SignUp: React.FC = () => {
             value={formData.password}
             onChange={handleChange}
             required
-            style={{
-              width: '100%',
-              padding: '10px',
-              border: '1px solid #ccc',
-              borderRadius: '5px',
-            }}
+            className="w-full p-3 border border-gray-300 rounded-md"
           />
         </div>
+
         <button 
           type="submit"
-          style={{
-            width: '100%',
-            padding: '10px',
-            backgroundColor: '#007bff',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            fontSize: '1rem',
-          }}
+          className="w-full p-3 bg-bg-button text-white rounded-md font-semibold cursor-pointer"
         >
           Sign Up
         </button>

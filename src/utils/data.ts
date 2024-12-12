@@ -60,7 +60,7 @@ interface CurrentWeatherData {
     lon: number;
     lat: number;
   };
-  timezone: number; // Timezone offset in seconds
+  timezone: number; 
 }
 
 export const fetchGeolocation = async (): Promise<{ city: string; lat: number; lon: number }> => {
@@ -74,9 +74,8 @@ export const fetchGeolocation = async (): Promise<{ city: string; lat: number; l
   }
 };
 
-// Convert the timestamp to a local time based on the timezone (using luxon)
 const getLocalTime = (timestamp: number, timezoneOffset: number, is12Hour: boolean) => {
-  const timezone = `Asia/Kolkata`; // Replace with a proper IANA timezone if needed
+  const timezone = `Asia/Kolkata`; 
   return DateTime.fromSeconds(timestamp)
     .setZone(timezone)
     .toLocaleString({
@@ -90,7 +89,7 @@ export const fetchWeatherData = async (
   query: string | undefined,
   lat?: number,
   lon?: number,
-  is12Hour: boolean = true // Ensure is12Hour is passed properly
+  is12Hour: boolean = true 
 ) => {
   const currentWeatherUrl = query
     ? `${BASE_URL}weather?q=${query}&units=metric&appid=${API_KEY}`
@@ -109,7 +108,7 @@ export const fetchWeatherData = async (
     const currentWeather = currentWeatherResponse.data as CurrentWeatherData;
     const forecastData = forecastResponse.data as ForecastData;
 
-    const utcOffsetInSeconds = currentWeather.timezone; // Timezone offset in seconds
+    const utcOffsetInSeconds = currentWeather.timezone; 
     const sunrise = getLocalTime(currentWeather.sys.sunrise, utcOffsetInSeconds, is12Hour);
     const sunset = getLocalTime(currentWeather.sys.sunset, utcOffsetInSeconds, is12Hour);
 
@@ -129,7 +128,6 @@ export const fetchWeatherData = async (
         icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
       }));
 
-    // Convert timezone offset to a string (e.g., +05:30, UTC, etc.)
     const timezone = `${Math.floor(utcOffsetInSeconds / 3600)}:${(utcOffsetInSeconds % 3600) / 60}`;
 
     return {
