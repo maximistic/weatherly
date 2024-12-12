@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface SettingsContextProps {
   temperatureUnit: "Celsius" | "Fahrenheit";
@@ -11,10 +11,28 @@ interface SettingsContextProps {
 
 const SettingsContext = createContext<SettingsContextProps | undefined>(undefined);
 
+const SETTINGS_KEY = "userSettings";
+
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [temperatureUnit, setTemperatureUnit] = useState<"Celsius" | "Fahrenheit">("Celsius");
   const [windSpeedUnit, setWindSpeedUnit] = useState<"km/h" | "m/s" | "Knots">("km/h");
   const [is12HourTime, setIs12HourTime] = useState<boolean>(true);
+
+  useEffect(() => {
+    const savedSettings = localStorage.getItem(SETTINGS_KEY);
+    if (savedSettings) {
+      const parsedSettings = JSON.parse(savedSettings);
+      if (parsedSettings.temperatureUnit) setTemperatureUnit(parsedSettings.temperatureUnit);
+      if (parsedSettings.windSpeedUnit) setWindSpeedUnit(parsedSettings.windSpeedUnit);
+      if (typeof parsedSettings.is12HourTime === "boolean")
+        setIs12HourTime(parsedSettings.is12HourTime);
+    }
+  }, []);
+
+  useEffect(() => {
+    const settings = { temperatureUnit, windSpeedUnit, is12HourTime };
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  }, [temperatureUnit, windSpeedUnit, is12HourTime]);
 
   return (
     <SettingsContext.Provider

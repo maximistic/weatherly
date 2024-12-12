@@ -41,7 +41,7 @@ export default function SearchBar({
       style={{ margin: "10px" }}
     >
       <button
-        className="text-white p-2 rounded-md hover:text-red-500 block sm:hidden"
+        className="cols p-2 rounded-md hover:text-red-500 block sm:hidden"
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
       >
         {isSidebarOpen ? <FiX size={24} /> : <FiMenu size={24} />}
@@ -60,11 +60,11 @@ export default function SearchBar({
       <FiSearch
         size={24}
         className={`cursor-pointer hover:text-red-500 ${
-          theme === "dark" ? "text-gray-400" : "text-white"
+          theme === "dark" ? "text-gray-400" : "text-black"
         }`}
         onClick={handleSearchClick} 
       />
-      <button onClick={toggleTheme} className="ml-4 text-white hover:text-red-500">
+      <button onClick={toggleTheme} className="ml-4 cols hover:text-red-500">
         {theme === "dark" ? <FaMoon size={20} /> : <FaSun size={20} />}
       </button>
     </div>

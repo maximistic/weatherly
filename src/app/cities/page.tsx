@@ -153,7 +153,7 @@ const Cities = () => {
 
       {selectedCity && (
         <div
-          className={`flex flex-col sm:flex-1 sm:max-w-sm p-4 rounded-lg tru space-y-4`}
+          className={`flex flex-col sm:flex-1 sm:max-w-sm p-4 ml-4 rounded-lg tru space-y-4 border border-gray-500`}
         >
           <h2 className={`text-lg font-bold `}>{selectedCity.name} Details</h2>
           <div className="flex items-center gap-4">
