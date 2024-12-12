@@ -50,12 +50,14 @@ const Weather = () => {
     setError(null);
     try {
       const data = query
-        ? await fetchWeatherData(query)
-        : await fetchGeolocation().then((geo) =>
-            fetchWeatherData(undefined, geo.lat, geo.lon)
-          );
-      setWeatherData(data);
-      setLoading(false);
+      ? await fetchWeatherData({ query })
+      : await fetchGeolocation().then((geo) =>
+          fetchWeatherData({ lat: geo.lat, lon: geo.lon })
+      );
+    
+    setWeatherData(data);
+    setLoading(false);
+    
     } catch (err) {
       console.error("Error fetching weather data:", err);
       setError("Failed to fetch weather data. Check your input.");

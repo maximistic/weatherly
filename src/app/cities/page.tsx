@@ -33,7 +33,7 @@ const Cities = () => {
       }
   
       try {
-        const weatherData = await fetchWeatherData(query);
+        const weatherData = await fetchWeatherData({query});
   
         const newCity: City = {
           name: weatherData.city,
