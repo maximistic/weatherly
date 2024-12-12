@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSettings } from "@/context/SettingsContext";
 
 const Settings = () => {
@@ -13,9 +13,13 @@ const Settings = () => {
   } = useSettings();
 
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
-  const theme = document.documentElement.className; 
-  const isDarkTheme = theme === "dark";
+
+  useEffect(() => {
+    const theme = document.documentElement.className;
+    setIsDarkTheme(theme === "dark");
+  }, []);
 
   const colors = isDarkTheme
     ? {
@@ -34,7 +38,7 @@ const Settings = () => {
         button: "bg-[#3B82F6]",
         buttonHover: "hover:bg-[#2563EB]",
       };
-
+      
   return (
     <div className={`p-1 font-[family-name:var(--font-geist-sans)] rounded-lg ${colors.background}`}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
