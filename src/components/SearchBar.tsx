@@ -36,7 +36,7 @@ export default function SearchBar({
   return (
     <div
       className={`p-4 flex items-center space-x-4 rounded-lg ${
-        theme === "dark" ? "bg-gray-800" : "bg-gray-400"
+        theme === "dark" ? "bg-gray-800" : "bg-blue-300"
       }`}
       style={{ margin: "10px" }}
     >
@@ -51,8 +51,8 @@ export default function SearchBar({
         placeholder="Search by city or ZIP"
         value={inputValue} 
         onChange={(e) => setInputValue(e.target.value)} 
-        className={`px-4 py-2 rounded-md flex-1  border border-gray-600 ${
-          theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-300 text-black"
+        className={`px-4 py-2 rounded-md flex-1 ${
+          theme === "dark" ? "bg-gray-700 text-white" : "bg-blue-100 text-black"
         }`}
         onKeyDown={handleKeyDown}
         style={{ width: "70%" }}

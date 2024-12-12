@@ -3,16 +3,19 @@
 @tailwind utilities;
 
 :root {
-  --bg-color-light: #FAFAFA;
+  --bg-color-light: rgb(219 234 254);
   --text-color-light: #000000;
   --bg-color-dark: rgb(17, 25, 39);
   --text-color-dark: #ffffff;
   --bg-secondary-light: #f4f4f4;
 
-  --bg-button: #f71111;
+  --div-bg-light:rgb(191 219 254);
+  --div-bg-dark:rgb(31 41 55);
 
-  --bg-try-light: rgb(134 239 172);
-  
+  --text-light: #000000;
+  --text-dark: #ffffff;
+
+  --bg-button: #f71111;
 }
 
 html.light {
@@ -23,6 +26,14 @@ html.light {
 html.dark {
   --bg-color: var(--bg-color-dark);
   --text-color: var(--text-color-dark);
+}
+
+html.light div.tru {
+  background-color: var(--div-bg-light);
+}
+
+html.dark div.tru {
+  background-color: var(--div-bg-dark);
 }
 
 body {
@@ -45,12 +56,6 @@ button.settings{
 }
 
 form.tru {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  border: var(--text-color) solid 1px;
-}
-
-div.tru {
   background-color: var(--bg-color);
   color: var(--text-color);
   border: var(--text-color) solid 1px;

@@ -29,7 +29,7 @@ export default function SideBar({
       className={`${
         isSidebarOpen ? "block" : "hidden"
       } sm:block rounded-lg p-5 w-16 sm:w-40 transition-all duration-300 ${
-        theme === "dark" ? "bg-gray-800" : "bg-gray-400"
+        theme === "dark" ? "bg-gray-800" : "bg-blue-300"
       }`}
       style={{ margin: "10px" }}
     >
@@ -73,7 +73,7 @@ function SidebarButton({
   icon: React.ReactNode;
   label: string;
   active: boolean;
-  theme: string; // Add theme here to fix the error
+  theme: string; 
   onClick: () => void;
 }) {
   return (
@@ -84,7 +84,7 @@ function SidebarButton({
           ? " text-red-500"
           : theme === "dark"
           ? "text-white hover:text-red-500"
-          : "text-white hover:text-red-500"
+          : "text-black hover:text-red-500"
       }`}
     >
       {icon}

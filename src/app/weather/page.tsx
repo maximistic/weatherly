@@ -250,7 +250,7 @@ const Weather = () => {
                 &times;
               </button>
             </div>
-            <div className="mt-4 text-sm text-gray-400">
+            <div className="mt-4 text-sm ">
               {activeCondition === "realFeel" && (
                 <p>
                   Real feel is how the temperature feels when considering factors
