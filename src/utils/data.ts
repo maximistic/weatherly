@@ -1,4 +1,5 @@
 import axios from "axios";
+import { DateTime } from "luxon";
 
 const API_KEY = "af05fb7faf92f827af6f0f25123dc259";
 const BASE_URL = "https://api.openweathermap.org/data/2.5/";
@@ -59,9 +60,9 @@ interface CurrentWeatherData {
     lon: number;
     lat: number;
   };
+  timezone: number; // Timezone offset in seconds
 }
 
-// Fetch geolocation using IP-API
 export const fetchGeolocation = async (): Promise<{ city: string; lat: number; lon: number }> => {
   try {
     const response = await axios.get(IP_API_URL);
@@ -73,30 +74,46 @@ export const fetchGeolocation = async (): Promise<{ city: string; lat: number; l
   }
 };
 
-  export const fetchWeatherData = async (
-    query: string | undefined,
-    lat?: number,
-    lon?: number
-  ) => {
-    const currentWeatherUrl = query
-      ? `${BASE_URL}weather?q=${query}&units=metric&appid=${API_KEY}`
-      : `${BASE_URL}weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
-  
-    const forecastUrl = query
-      ? `${BASE_URL}forecast?q=${query}&units=metric&appid=${API_KEY}`
-      : `${BASE_URL}forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
-  
-    try {
-      const [currentWeatherResponse, forecastResponse] = await Promise.all([
-        axios.get(currentWeatherUrl),
-        axios.get(forecastUrl),
-      ]);
-  
-      const currentWeather = currentWeatherResponse.data as CurrentWeatherData;
-      const forecastData = forecastResponse.data as ForecastData;
+// Convert the timestamp to a local time based on the timezone (using luxon)
+const getLocalTime = (timestamp: number, timezoneOffset: number, is12Hour: boolean) => {
+  // Convert timezone offset (in seconds) to minutes
 
-    const sunrise = new Date(currentWeather.sys.sunrise * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    const sunset = new Date(currentWeather.sys.sunset * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const timezone = `Asia/Kolkata`; // Replace with a proper IANA timezone if needed
+  return DateTime.fromSeconds(timestamp)
+    .setZone(timezone)
+    .toLocaleString({
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: is12Hour,
+    });
+};
+
+export const fetchWeatherData = async (
+  query: string | undefined,
+  lat?: number,
+  lon?: number,
+  is12Hour: boolean = true // Ensure is12Hour is passed properly
+) => {
+  const currentWeatherUrl = query
+    ? `${BASE_URL}weather?q=${query}&units=metric&appid=${API_KEY}`
+    : `${BASE_URL}weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
+
+  const forecastUrl = query
+    ? `${BASE_URL}forecast?q=${query}&units=metric&appid=${API_KEY}`
+    : `${BASE_URL}forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
+
+  try {
+    const [currentWeatherResponse, forecastResponse] = await Promise.all([
+      axios.get(currentWeatherUrl),
+      axios.get(forecastUrl),
+    ]);
+
+    const currentWeather = currentWeatherResponse.data as CurrentWeatherData;
+    const forecastData = forecastResponse.data as ForecastData;
+
+    const utcOffsetInSeconds = currentWeather.timezone; // Timezone offset in seconds
+    const sunrise = getLocalTime(currentWeather.sys.sunrise, utcOffsetInSeconds, is12Hour);
+    const sunset = getLocalTime(currentWeather.sys.sunset, utcOffsetInSeconds, is12Hour);
 
     const hourlyForecast: HourlyForecast[] = forecastData.list.slice(0, 6).map((item: WeatherData) => ({
       time: new Date(item.dt * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
@@ -127,7 +144,7 @@ export const fetchGeolocation = async (): Promise<{ city: string; lat: number; l
       weeklyForecast,
       lat: currentWeather.coord.lat,
       lon: currentWeather.coord.lon,
-      timezone: "Asia/Kolkata",
+      timezone: currentWeather.timezone,
     };
   } catch (error) {
     console.error("Error fetching weather data:", error);
