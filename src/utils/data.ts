@@ -76,8 +76,6 @@ export const fetchGeolocation = async (): Promise<{ city: string; lat: number; l
 
 // Convert the timestamp to a local time based on the timezone (using luxon)
 const getLocalTime = (timestamp: number, timezoneOffset: number, is12Hour: boolean) => {
-  // Convert timezone offset (in seconds) to minutes
-
   const timezone = `Asia/Kolkata`; // Replace with a proper IANA timezone if needed
   return DateTime.fromSeconds(timestamp)
     .setZone(timezone)
@@ -131,6 +129,9 @@ export const fetchWeatherData = async (
         icon: `https://openweathermap.org/img/wn/${item.weather[0].icon}.png`,
       }));
 
+    // Convert timezone offset to a string (e.g., +05:30, UTC, etc.)
+    const timezone = `${Math.floor(utcOffsetInSeconds / 3600)}:${(utcOffsetInSeconds % 3600) / 60}`;
+
     return {
       city: currentWeather.name,
       currentTemp: currentWeather.main.temp,
@@ -144,7 +145,7 @@ export const fetchWeatherData = async (
       weeklyForecast,
       lat: currentWeather.coord.lat,
       lon: currentWeather.coord.lon,
-      timezone: currentWeather.timezone,
+      timezone, 
     };
   } catch (error) {
     console.error("Error fetching weather data:", error);
