@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { fetchWeatherData } from "@/utils/data";
@@ -12,18 +13,21 @@ export type City = {
   temp: string;
   icon: string;
   hourlyForecast: { time: string; temp: string; icon: string }[];
-  time: string;
-  timezone: string;
+  time: string;  
+  timezone: string; 
 };
 
-const Cities = ({ searchQuery }: { searchQuery?: string }) => {
+const Cities = ({ searchQuery }: { searchQuery: string }) => {
   const { cities, addCity, deleteCity, deleteAllCities } = useCities();
-  const { temperatureUnit } = useSettings();
+  const { temperatureUnit } = useSettings(); 
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isDarkTheme, setIsDarkTheme] = useState(false); 
 
-  const theme = document.documentElement.className;
-  const isDarkTheme = theme === "dark";
+  useEffect(() => {
+    const theme = document.documentElement.className;
+    setIsDarkTheme(theme === "dark");
+  }, []);
 
   const colors = isDarkTheme
     ? {
@@ -43,38 +47,37 @@ const Cities = ({ searchQuery }: { searchQuery?: string }) => {
         buttonHover: "hover:bg-red-500",
       };
 
-      const handleAddCity = useCallback(
-        async (query: string) => {
-          if (cities.length >= 5) {
-            setError("Maximum 5 cities allowed. Delete one to add another.");
-            setTimeout(() => setError(null), 3000);
-            return;
-          }
-      
-          try {
-            const weatherData = await fetchWeatherData(query);
-      
-            const newCity: City = {
-              name: weatherData.city,
-              temp: weatherData.currentTemp.toString(),
-              icon: weatherData.hourlyForecast[0]?.icon || "",
-              hourlyForecast: weatherData.hourlyForecast.slice(0, 6).map((hour) => ({
-                ...hour,
-                temp: hour.temp.toString(),
-              })),
-              time: new Date().toLocaleString(),
-              timezone: weatherData.timezone || "UTC",
-            };
-      
-            addCity(newCity);
-            setError(null);
-          } catch {
-            setError("City not found or API error. Please try again.");
-            setTimeout(() => setError(null), 3000);
-          }
-        },
-        [cities, addCity]
-      );      
+    const handleAddCity = useCallback(async (query: string) => {
+      if (cities.length >= 5) {
+        setError("Maximum 5 cities allowed. Delete one to add another.");
+        setTimeout(() => setError(null), 3000); 
+        return;
+      }
+
+      try {
+        const weatherData = await fetchWeatherData(query);
+  
+        const newCity: City = {
+          name: weatherData.city,
+          temp: weatherData.currentTemp.toString(),  
+          icon: weatherData.hourlyForecast[0]?.icon || "",
+          hourlyForecast: weatherData.hourlyForecast.slice(0, 6).map((hour) => ({
+            ...hour,
+            temp: hour.temp.toString(), 
+          })),
+          time: new Date().toLocaleString(),
+          timezone: weatherData.timezone || "UTC",  
+        };
+
+        addCity(newCity);
+        setError(null);
+      } catch {
+        setError("City not found or API error. Please try again.");
+        setTimeout(() => setError(null), 3000);
+      }
+    },
+    [cities, addCity]
+  );
 
   const convertTemperature = (
     temp: number | string,
@@ -148,8 +151,9 @@ const Cities = ({ searchQuery }: { searchQuery?: string }) => {
             </div>
             <div className="flex items-center gap-4">
               <div className={`text-xl font-semibold ${colors.textPrimary}`}>
-                {convertTemperature(Number(city.temp), temperatureUnit)}°
-                {temperatureUnit === "Celsius" ? "C" : "F"}
+                {convertTemperature(Number(city.temp), temperatureUnit)}°{
+                  temperatureUnit === "Celsius" ? "C" : "F"
+                }
               </div>
               <button
                 onClick={(e) => {
