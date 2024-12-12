@@ -86,7 +86,7 @@ const Cities = () => {
   };
 
   return (
-    <div className={`flex flex-col sm:flex-row gap-4 sm:gap-8 p-4 sm:p-8`}>
+    <div className={`flex flex-col sm:flex-row  p-4 sm:p-8`}>
       {/* Left Panel: City List */}
       <div className={`flex-1 space-y-4 tru rounded-lg p-4`}>
         <div className="flex items-center justify-between">

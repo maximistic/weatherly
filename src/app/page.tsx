@@ -9,9 +9,9 @@ const Page = () => {
   const pathname = usePathname();
 
   return (
-    <div className="flex h-screen p-4 sm:p-8 rounded-md">
+    <div className="flex h-screen p-6 rounded-md">
       <div className="flex-1 flex flex-col w-full">
-        <div className="sm:p-8 flex-1">
+        <div className=" flex-1">
           <div className="content">
             {pathname === "/" && <Weather />}
             {pathname === "/weather" && <Weather />}
