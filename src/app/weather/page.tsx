@@ -1,26 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import {
-  WiThermometer,
-  WiStrongWind,
-  WiSunrise,
-  WiSunset,
-} from "react-icons/wi";
-import {
-  fetchWeatherData,
-  fetchGeolocation,
-  HourlyForecast,
-  WeeklyForecast,
-} from "@/utils/data";
-import "../globals.css";
+import { FaCrosshairs } from "react-icons/fa";
+import { WiThermometer, WiStrongWind, WiSunrise, WiSunset } from "react-icons/wi";
+import { fetchWeatherData, fetchGeolocation, HourlyForecast, WeeklyForecast } from "@/utils/data";
 import { useSettings } from "@/context/SettingsContext";
 import { useSearchQuery } from "@/context/SearchQueryContext";
+import Image from "next/image";
+import "../globals.css";
 import MapComponent from "./MapComponent";
 
 const Weather = () => {
   const { temperatureUnit, windSpeedUnit } = useSettings();
-  const { searchQuery } = useSearchQuery();
+  const { searchQuery, setSearchQuery } = useSearchQuery();
   const [weatherData, setWeatherData] = useState<{
     city: string;
     currentTemp: number | string;
@@ -72,9 +63,21 @@ const Weather = () => {
     }
   };
 
+  // Fetch weather data based on the searchQuery
   useEffect(() => {
-    fetchData(searchQuery);
+    if (searchQuery) {
+      fetchData(searchQuery);
+    } else {
+      // Default to Coimbatore if no search query is present
+      fetchData("Coimbatore");
+    }
   }, [searchQuery]);
+
+  const handleLocationFetch = async () => {
+    const geo = await fetchGeolocation();
+    setSearchQuery(geo.city);
+    fetchData(geo.city);
+  };
 
   if (loading) return <div className="text-white">Loading...</div>;
   if (error)
@@ -83,7 +86,7 @@ const Weather = () => {
         <p className="text-red-400">{error}</p>
         <button
           className="bg-blue-600 text-white px-4 py-2 mt-4 rounded-md"
-          onClick={() => fetchData()}
+          onClick={() => fetchData(searchQuery)}
         >
           Retry
         </button>
@@ -103,6 +106,9 @@ const Weather = () => {
             <div className="flex items-center">
               <div>
                 <h1 className={`text-3xl font-bold`}>{weatherData?.city}</h1>
+                <button onClick={handleLocationFetch} className="ml-4">
+                  <FaCrosshairs size={24} />
+                </button>
                 <div className="flex items-center space-x-4 mt-2">
                   <div className="flex items-center">
                     <WiThermometer size={24} className="mr-2 text-red-400" />
