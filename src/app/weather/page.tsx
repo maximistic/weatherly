@@ -95,14 +95,14 @@ const Weather = () => {
   };
 
   return (
-    <div className="p-1 text-white font-[family-name:var(--font-geist-sans)]">
+    <div className={`p-1 font-[family-name:var(--font-geist-sans)]`}>
       {/* Today's Forecast */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           <div className="flex justify-between items-center mb-8">
             <div className="flex items-center">
               <div>
-                <h1 className="text-3xl font-bold">{weatherData?.city}</h1>
+                <h1 className={`text-3xl font-bold`}>{weatherData?.city}</h1>
                 <div className="flex items-center space-x-4 mt-2">
                   <div className="flex items-center">
                     <WiThermometer size={24} className="mr-2 text-red-400" />
@@ -151,7 +151,7 @@ const Weather = () => {
             {weatherData?.hourlyForecast.map((hour, index) => (
               <div
                 key={index}
-                className="bg-gray-800 p-4 rounded-lg text-center min-w-[80px]"
+                className="tru p-4 rounded-lg text-center min-w-[80px]"
               >
                 <p className="text-sm mb-2">{hour.time}</p>
                 <Image
@@ -175,9 +175,9 @@ const Weather = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="mb-8 lg:mb-0">
             <h3 className="text-lg font-semibold mb-4 ">Air Conditions</h3>
-            <div className="grid grid-cols-2 gap-4 bg-gray-800 p-4 rounded-lg h-full">
+            <div className="grid grid-cols-2 gap-4 tru p-4 rounded-lg h-full">
               <div
-                className="flex items-center justify-between cursor-pointer hover:bg-gray-700 p-2 rounded-md transition-all"
+                className="flex items-center justify-between cursor-pointer tru hover:bg-gray-700 hover:text-white p-2 rounded-md transition-all"
                 onClick={() => setActiveCondition("realFeel")}
               >
                 <div>
@@ -191,7 +191,7 @@ const Weather = () => {
                 <WiThermometer className="text-4xl text-blue-400" />
               </div>
               <div
-                className="flex items-center justify-between cursor-pointer hover:bg-gray-700 p-2 rounded-md transition-all"
+                className="flex items-center justify-between cursor-pointer tru hover:bg-gray-700 hover:text-white p-2 rounded-md transition-all"
                 onClick={() => setActiveCondition("wind")}
               >
                 <div>
@@ -205,7 +205,7 @@ const Weather = () => {
                 <WiStrongWind className="text-4xl text-blue-400" />
               </div>
               <div
-                className="flex items-center justify-between cursor-pointer hover:bg-gray-700 p-2 rounded-md transition-all"
+                className="flex items-center justify-between cursor-pointer tru hover:bg-gray-700 hover:text-white p-2 rounded-md transition-all"
                 onClick={() => setActiveCondition("sunrise")}
               >
                 <div>
@@ -215,7 +215,7 @@ const Weather = () => {
                 <WiSunrise className="text-4xl text-yellow-400" />
               </div>
               <div
-                className="flex items-center justify-between cursor-pointer hover:bg-gray-700 p-2 rounded-md transition-all"
+                className="flex items-center justify-between cursor-pointer tru hover:bg-gray-700 hover:text-white p-2 rounded-md transition-all"
                 onClick={() => setActiveCondition("sunset")}
               >
                 <div>
@@ -228,12 +228,12 @@ const Weather = () => {
           </div>
 
           <div
-            className={`pt-7 mt-12 bg-gray-800 p-3 rounded-lg shadow-lg ${
+            className={`pt-7 mt-12 tru p-3 rounded-lg shadow-lg ${
               activeCondition ? "block" : "hidden"
             }`}
           >
             <div className="flex justify-between items-center">
-              <h4 className="text-xl font-semibold text-white">
+              <h4 className="text-xl font-semibold">
                 {activeCondition === "realFeel" && "Real Feel Explained"}
                 {activeCondition === "wind" && "Wind Speed Explained"}
                 {activeCondition === "sunrise" && "Sunrise Time Explained"}
@@ -241,7 +241,7 @@ const Weather = () => {
               </h4>
               <button
                 onClick={closeConditionSection}
-                className="text-white text-xl border border-gray-400 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-700 transition-all"
+                className=" text-xl border border-gray-400 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-700 hover:text-white transition-all"
               >
                 &times;
               </button>
@@ -284,7 +284,7 @@ const Weather = () => {
           <p>Map unavailable for this location.</p>
         )}
           <h3 className="text-lg font-semibold mb-4 top-1/2 mt-10">5-Day Forecast</h3>
-          <div className="bg-gray-800 p-2 rounded-lg mt-0">
+          <div className="tru p-2 rounded-lg mt-0">
           {weatherData?.weeklyForecast.map((day, index) => {
             const splitTemp = day.temp ? day.temp.split("/") : [];
             const convertedTemp = splitTemp.length === 2
@@ -302,7 +302,7 @@ const Weather = () => {
                   width={32}
                   height={32}
                 />
-                <p className="text-gray-400">{day.condition}</p>
+                <p className="tru text-semibold">{day.condition}</p>
                 <p className="font-bold">
                   {convertedTemp || day.temp} 
                 </p>

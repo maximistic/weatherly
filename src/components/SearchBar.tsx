@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { FiSearch, FiMenu, FiX } from "react-icons/fi";
 import { FaSun, FaMoon } from "react-icons/fa";
-import { useSearchQuery } from "@/context/SearchQueryContext"; // Import the custom hook
+import { useSearchQuery } from "@/context/SearchQueryContext"; 
 
 interface SearchBarProps {
   setIsSidebarOpen: (isOpen: boolean) => void;
@@ -19,19 +19,19 @@ export default function SearchBar({
   theme,
   toggleTheme,
 }: SearchBarProps) {
-  const { setSearchQuery } = useSearchQuery(); // Access the setSearchQuery from context
-  const [inputValue, setInputValue] = useState(""); // Local state for input field
+  const { setSearchQuery } = useSearchQuery(); 
+  const [inputValue, setInputValue] = useState(""); 
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setSearchQuery(inputValue); // Set the query to context when Enter is pressed
-      setInputValue(""); // Clear the input field
+      setSearchQuery(inputValue); 
+      setInputValue(""); 
     }
   };
 
   const handleSearchClick = () => {
-    setSearchQuery(inputValue); // Set the query to context when search icon is clicked
-    setInputValue(""); // Clear the input field
+    setSearchQuery(inputValue); 
+    setInputValue(""); 
   };
 
   return (
@@ -50,8 +50,8 @@ export default function SearchBar({
       <input
         type="text"
         placeholder="Search by city or ZIP"
-        value={inputValue} // Bind input value to local state
-        onChange={(e) => setInputValue(e.target.value)} // Update local state on input change
+        value={inputValue} 
+        onChange={(e) => setInputValue(e.target.value)} 
         className={`px-4 py-2 rounded-md flex-1  border border-gray-600 ${
           theme === "dark" ? "bg-gray-700 text-white" : "bg-gray-300 text-black"
         }`}

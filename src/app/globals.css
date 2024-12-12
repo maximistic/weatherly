@@ -3,11 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --bg-color-light: #ffffff;
+  --bg-color-light: #FAFAFA;
   --text-color-light: #000000;
-  --bg-color-dark: #121212;
+  --bg-color-dark: rgb(17 24 39);
   --text-color-dark: #ffffff;
   --bg-secondary-light: #f4f4f4;
+
+  --bg-button: #f71111;
 }
 
 html.light {
@@ -26,6 +28,22 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+}
+
+button.tru{
+  background-color: var(--bg-button);
+  color: #ffffff;
+}
+
+button.settings{
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+div.tru {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  border: var(--text-color) solid 1px;
 }
 
 input, button {
@@ -48,6 +66,7 @@ button {
 *::-webkit-scrollbar {
   width: 8px;
   height: 8px;
+  padding-top: 2vh;
 }
 
 *::-webkit-scrollbar-thumb {
@@ -58,4 +77,7 @@ button {
 *::-webkit-scrollbar-track {
   background-color: #2d3748; 
   border-radius: 8px; 
+}
+.error-message {
+  @apply fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-red-500 text-white font-bold py-2 px-4 rounded shadow-lg z-50;
 }
