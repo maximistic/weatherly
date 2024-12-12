@@ -10,6 +10,7 @@ interface SearchBarProps {
   isSidebarOpen: boolean;
   theme: string;
   toggleTheme: () => void;
+  onSearch: (query: string) => void;
 }
 
 export default function SearchBar({

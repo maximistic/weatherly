@@ -47,6 +47,7 @@ export default function RootLayout({}: { children: React.ReactNode }) {
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+    console.log("Search query:", searchQuery);
   };
 
   return (
@@ -73,7 +74,7 @@ export default function RootLayout({}: { children: React.ReactNode }) {
               {(() => {
                 if (pathname === "/pricing") return <Pricing />;
                 if (pathname === "/signup") return <SignUp />;
-                return <Page searchQuery={searchQuery} />;
+                return <Page />;
               })()}
             </main>
             </div>
