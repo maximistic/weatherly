@@ -181,7 +181,7 @@ const Weather = () => {
             <h3 className="text-lg font-semibold mb-4 ">Air Conditions</h3>
             <div className="grid grid-cols-2 gap-4 tru p-4 rounded-lg h-full cursor-pointer">
               <div
-                className="flex items-center justify-between cursor-pointer tru hover:bg-gray-700 hover:text-white p-2 rounded-md transition-all"
+                className="flex items-center justify-between cursor-pointer tru hover:bg-gray-700 hover:text-gray-700 p-2 rounded-md transition-all"
                 onClick={() => setActiveCondition("realFeel")}
               >
                 <div>
