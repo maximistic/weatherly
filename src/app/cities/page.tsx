@@ -111,8 +111,8 @@ const Cities = () => {
             onClick={() => setSelectedCity(city)}
             className={`flex items-center justify-between p-4 rounded-lg tru ${
               selectedCity?.name === city.name
-                ? "bg-gray-700 border border-blue-500 text-white"
-                : ` hover:bg-gray-700 hover:text-white`
+                ? "bg-gray-700 border border-gray-500 "
+                : ` hover:bg-gray-700 hover:border hover:border-gray-500 `
             } cursor-pointer transition-all`}
           >
             <div className="flex items-center gap-4">

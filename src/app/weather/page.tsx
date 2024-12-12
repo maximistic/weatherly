@@ -179,7 +179,7 @@ const Weather = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="mb-8 lg:mb-0">
             <h3 className="text-lg font-semibold mb-4 ">Air Conditions</h3>
-            <div className="grid grid-cols-2 gap-4 tru p-4 rounded-lg h-full">
+            <div className="grid grid-cols-2 gap-4 tru p-4 rounded-lg h-full cursor-pointer">
               <div
                 className="flex items-center justify-between cursor-pointer tru hover:bg-gray-700 hover:text-white p-2 rounded-md transition-all"
                 onClick={() => setActiveCondition("realFeel")}
@@ -245,7 +245,7 @@ const Weather = () => {
               </h4>
               <button
                 onClick={closeConditionSection}
-                className=" text-xl border border-gray-400 rounded-full w-8 h-8 flex items-center justify-center hover:bg-gray-700 hover:text-white transition-all"
+                className=" text-xl border border-gray-400 rounded-full w-8 h-8 flex items-center justify-center cursor-pointer transition-all"
               >
                 &times;
               </button>

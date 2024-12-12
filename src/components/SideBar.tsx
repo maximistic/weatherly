@@ -84,7 +84,7 @@ function SidebarButton({
           ? " text-red-500"
           : theme === "dark"
           ? "text-white hover:text-red-500"
-          : "text-black hover:text-red-500"
+          : "text-slate-800 hover:text-red-500"
       }`}
     >
       {icon}

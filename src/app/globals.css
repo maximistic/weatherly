@@ -10,7 +10,7 @@
   --bg-secondary-light: #f4f4f4;
 
   --div-bg-light:rgb(191 219 254);
-  --div-bg-dark:rgb(31 41 55);
+  --div-bg-dark:rgb(191 219 254);
 
   --text-light: #000000;
   --text-dark: #ffffff;
@@ -34,6 +34,7 @@ html.light div.tru {
 
 html.dark div.tru {
   background-color: var(--div-bg-dark);
+  color:var(--text-light);
 }
 
 body {

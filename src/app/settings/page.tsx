@@ -161,7 +161,7 @@ const Settings = () => {
               }`}
             ></span>
           </label>
-          <p className={`ml-4 text-md text-red-500`}>
+          <p className={`ml-4 text-md text-red-500 `}>
             {is12HourTime ? "12-Hour Time" : "24-Hour Time"}
           </p>
         </div>
