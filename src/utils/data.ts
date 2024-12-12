@@ -89,29 +89,26 @@ type FetchWeatherDataParams =
   | { query: string; is12Hour?: boolean }
   | { lat: number; lon: number; is12Hour?: boolean };
 
-  export const fetchWeatherData = async (params: FetchWeatherDataParams) => {
-    if (typeof params !== "object" || params === null) {
-      throw new TypeError("Invalid argument: params must be an object.");
-    }
-  
-    if ("query" in params) {
-      const { query, is12Hour = true } = params;
-      // Fetch data using query
-      const currentWeatherUrl = `${BASE_URL}weather?q=${query}&units=metric&appid=${API_KEY}`;
-      const forecastUrl = `${BASE_URL}forecast?q=${query}&units=metric&appid=${API_KEY}`;
-      return fetchWeatherDataUsingUrls(currentWeatherUrl, forecastUrl, is12Hour);
-    } else if ("lat" in params && "lon" in params) {
-      const { lat, lon, is12Hour = true } = params;
-      // Fetch data using lat/lon
-      const currentWeatherUrl = `${BASE_URL}weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
-      const forecastUrl = `${BASE_URL}forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
-      return fetchWeatherDataUsingUrls(currentWeatherUrl, forecastUrl, is12Hour);
-    } else {
-      throw new TypeError(
-        "Invalid argument: params must include either 'query' or 'lat' and 'lon'."
-      );
-    }
-  };  
+export const fetchWeatherData = async (params: FetchWeatherDataParams) => {
+  // No need for this check anymore because the type already enforces it
+  if ("query" in params) {
+    const { query, is12Hour = true } = params;
+    // Fetch data using query
+    const currentWeatherUrl = `${BASE_URL}weather?q=${query}&units=metric&appid=${API_KEY}`;
+    const forecastUrl = `${BASE_URL}forecast?q=${query}&units=metric&appid=${API_KEY}`;
+    return fetchWeatherDataUsingUrls(currentWeatherUrl, forecastUrl, is12Hour);
+  } else if ("lat" in params && "lon" in params) {
+    const { lat, lon, is12Hour = true } = params;
+    // Fetch data using lat/lon
+    const currentWeatherUrl = `${BASE_URL}weather?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
+    const forecastUrl = `${BASE_URL}forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
+    return fetchWeatherDataUsingUrls(currentWeatherUrl, forecastUrl, is12Hour);
+  } else {
+    throw new TypeError(
+      "Invalid argument: params must include either 'query' or 'lat' and 'lon'."
+    );
+  }
+}; 
 
 const fetchWeatherDataUsingUrls = async (
   currentWeatherUrl: string,
