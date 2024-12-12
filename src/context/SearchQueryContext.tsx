@@ -1,7 +1,6 @@
-// src/context/SearchQueryContext.tsx
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const SearchQueryContext = createContext<{
   searchQuery: string;
@@ -13,6 +12,19 @@ const SearchQueryContext = createContext<{
 
 export const SearchQueryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
+
+  useEffect(() => {
+    const savedSearchQuery = localStorage.getItem("searchQuery");
+    if (savedSearchQuery) {
+      setSearchQuery(savedSearchQuery);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (searchQuery) {
+      localStorage.setItem("searchQuery", searchQuery);
+    }
+  }, [searchQuery]);
 
   return (
     <SearchQueryContext.Provider value={{ searchQuery, setSearchQuery }}>
