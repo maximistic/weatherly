@@ -16,7 +16,7 @@ export type City = {
   timezone: string;
 };
 
-const Cities = ({ searchQuery }: { searchQuery: string }) => {
+const Cities = ({ searchQuery }: { searchQuery?: string }) => {
   const { cities, addCity, deleteCity, deleteAllCities } = useCities();
   const { temperatureUnit } = useSettings();
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
@@ -52,8 +52,7 @@ const Cities = ({ searchQuery }: { searchQuery: string }) => {
           }
       
           try {
-            // Pass the query as an object with the city key
-            const weatherData = await fetchWeatherData({ city: query });
+            const weatherData = await fetchWeatherData(query);
       
             const newCity: City = {
               name: weatherData.city,
