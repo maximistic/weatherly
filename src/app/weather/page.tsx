@@ -15,10 +15,12 @@ import {
 } from "@/utils/data";
 import "../globals.css";
 import { useSettings } from "@/context/SettingsContext";
+import { useSearchQuery } from "@/context/SearchQueryContext";
 import MapComponent from "./MapComponent";
 
-const Weather = ({ searchQuery }: { searchQuery: string }) => {
+const Weather = () => {
   const { temperatureUnit, windSpeedUnit } = useSettings();
+  const { searchQuery } = useSearchQuery();
   const [weatherData, setWeatherData] = useState<{
     city: string;
     currentTemp: number | string;

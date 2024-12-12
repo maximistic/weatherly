@@ -2,14 +2,14 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useSearchQuery } from "@/context/SearchQueryContext"; // Use the context hook
+import { useSearchQuery } from "@/context/SearchQueryContext"; 
 import Weather from "../app/weather/page";
 import Cities from "../app/cities/page";
 import Settings from "../app/settings/page";
 
 const Page = () => {
   const pathname = usePathname();
-  const { searchQuery } = useSearchQuery(); // Get searchQuery directly from the context
+  const { searchQuery } = useSearchQuery(); 
 
   return (
     <div className="flex h-screen p-4 sm:p-8 rounded-md">
